@@ -323,201 +323,265 @@
     </div>
 
     <script>
-        // Animation timeline
-        const timeline = {
-            intro: { start: 0, end: 2000 },
-            mainGame: { start: 3000, end: 18000 },
-            twist: { start: 19000, end: 23000 },
-            victory: { start: 24000, end: 28000 },
-            outro: { start: 29000, end: 30000 }
-        };
+// Modern Animation Timeline
+const timeline = {
+    intro: { start: 0, end: 1500 },
+    mainGame: { start: 2000, end: 12000 },
+    twist: { start: 13000, end: 16000 },
+    victory: { start: 17000, end: 20000 },
+    outro: { start: 21000, end: 22000 }
+};
 
-        // Elements
-        const messiHead = document.getElementById('messiHead');
-        const ronaldoHead = document.getElementById('ronaldoHead');
-        const ronaldoSilhouette = document.getElementById('ronaldoSilhouette');
-        const fingerPointer = document.getElementById('fingerPointer');
-        const tungtungFace = document.getElementById('tungtungFace');
-        const socialIcons = document.getElementById('socialIcons');
-        const glitchOverlay = document.querySelector('.glitch-overlay');
-        const victoryGlow = document.querySelector('.victory-glow');
+// Elements
+const messiHead = document.getElementById('messiHead');
+const ronaldoHead = document.getElementById('ronaldoHead');
+const ronaldoSilhouette = document.getElementById('ronaldoSilhouette');
+const fingerPointer = document.getElementById('fingerPointer');
+const tungtungFace = document.getElementById('tungtungFace');
+const socialIcons = document.getElementById('socialIcons');
+const glitchOverlay = document.querySelector('.glitch-overlay');
+const victoryGlow = document.querySelector('.victory-glow');
 
-        const bodyParts = [
-            document.getElementById('armLeft'),
-            document.getElementById('armRight'),
-            document.getElementById('legLeft')
-        ];
+const bodyParts = [
+    document.getElementById('armLeft'),
+    document.getElementById('armRight'),
+    document.getElementById('legLeft')
+];
 
-        let currentAttempt = 0;
-        let isDragging = false;
-        let animationStartTime = Date.now();
+let currentAttempt = 0;
+let animationStartTime = Date.now();
 
-        // Utility functions
-        function getTimeElapsed() {
-            return Date.now() - animationStartTime;
-        }
+// Utility functions
+function getTimeElapsed() {
+    return Date.now() - animationStartTime;
+}
 
-        function showFingerPointer(x, y) {
-            fingerPointer.style.left = x + 'px';
-            fingerPointer.style.top = y + 'px';
-            fingerPointer.classList.add('visible');
-        }
+function showFingerPointer(x, y) {
+    fingerPointer.style.left = x + 'px';
+    fingerPointer.style.top = y + 'px';
+    fingerPointer.style.opacity = '1';
+    fingerPointer.style.transform = 'scale(1)';
+    fingerPointer.classList.add('visible');
+}
 
-        function hideFingerPointer() {
-            fingerPointer.classList.remove('visible');
-        }
+function hideFingerPointer() {
+    fingerPointer.style.opacity = '0';
+    fingerPointer.style.transform = 'scale(0.8)';
+    fingerPointer.classList.remove('visible');
+}
 
-        function dragElement(element, targetX, targetY, onComplete) {
-            showFingerPointer(element.offsetLeft, element.offsetTop);
-            element.classList.add('dragging');
+function dragElement(element, targetX, targetY, onComplete) {
+    const startX = element.offsetLeft;
+    const startY = element.offsetTop;
+    
+    showFingerPointer(startX, startY);
+    element.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    element.style.transform = 'scale(1.05)';
+    element.classList.add('dragging');
+    
+    setTimeout(() => {
+        element.style.left = targetX + 'px';
+        element.style.top = targetY + 'px';
+        fingerPointer.style.left = targetX + 'px';
+        fingerPointer.style.top = targetY + 'px';
+        
+        setTimeout(() => {
+            element.style.transform = 'scale(1)';
+            element.classList.remove('dragging');
+            hideFingerPointer();
+            if (onComplete) onComplete();
+        }, 600);
+    }, 200);
+}
+
+function failAttempt(element) {
+    element.style.transition = 'all 0.3s ease-out';
+    element.style.transform = 'scale(0.9) rotate(5deg)';
+    element.style.filter = 'brightness(0.7) contrast(1.2)';
+    element.classList.add('failed');
+    
+    glitchOverlay.style.opacity = '0.8';
+    glitchOverlay.classList.add('active');
+    
+    messiHead.style.transform = 'scale(1.1)';
+    messiHead.classList.add('laugh');
+    
+    setTimeout(() => {
+        element.style.transition = 'all 0.4s ease-in-out';
+        element.style.transform = 'scale(1)';
+        element.style.filter = 'none';
+        element.classList.remove('failed');
+        
+        glitchOverlay.style.opacity = '0';
+        glitchOverlay.classList.remove('active');
+        
+        messiHead.style.transform = 'scale(1)';
+        messiHead.classList.remove('laugh');
+        
+        // Reset position with smooth animation
+        element.style.left = (100 + currentAttempt * 80) + 'px';
+        element.style.top = 'auto';
+        element.style.bottom = '200px';
+    }, 600);
+}
+
+function successAttempt(element) {
+    element.style.transition = 'all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+    element.style.transform = 'scale(1.2)';
+    element.style.filter = 'brightness(1.3) saturate(1.4)';
+    element.classList.add('success');
+    
+    setTimeout(() => {
+        element.style.transform = 'scale(1)';
+        element.style.filter = 'none';
+        element.classList.remove('success');
+    }, 500);
+}
+
+// Animation sequences
+function runIntro() {
+    setTimeout(() => {
+        messiHead.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        messiHead.style.transform = 'translateY(0) scale(1)';
+        messiHead.style.opacity = '1';
+        messiHead.classList.add('enter');
+        
+        setTimeout(() => {
+            ronaldoHead.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            ronaldoHead.style.transform = 'translateY(0) scale(1)';
+            ronaldoHead.style.opacity = '1';
+            ronaldoHead.classList.add('enter');
+        }, 300);
+    }, 200);
+}
+
+function runMainGame() {
+    setTimeout(() => {
+        ronaldoSilhouette.style.transition = 'all 1s ease-out';
+        ronaldoSilhouette.style.opacity = '1';
+        ronaldoSilhouette.style.transform = 'scale(1)';
+        ronaldoSilhouette.classList.add('visible');
+        
+        // Start body part attempts with staggered timing
+        setTimeout(() => attemptBodyPart(0), 800);
+        setTimeout(() => attemptBodyPart(1), 2800);
+        setTimeout(() => attemptBodyPart(2), 4800);
+        
+    }, timeline.mainGame.start);
+}
+
+function attemptBodyPart(index) {
+    if (index >= bodyParts.length) return;
+    
+    const part = bodyParts[index];
+    const silhouetteRect = ronaldoSilhouette.getBoundingClientRect();
+    const containerRect = document.querySelector('.container').getBoundingClientRect();
+    
+    const targetX = silhouetteRect.left - containerRect.left + 80;
+    const targetY = silhouetteRect.top - containerRect.top + 120;
+    
+    dragElement(part, targetX, targetY, () => {
+        failAttempt(part);
+        currentAttempt++;
+    });
+}
+
+function runTwist() {
+    setTimeout(() => {
+        const silhouetteRect = ronaldoSilhouette.getBoundingClientRect();
+        const containerRect = document.querySelector('.container').getBoundingClientRect();
+        
+        const targetX = silhouetteRect.left - containerRect.left + 80;
+        const targetY = silhouetteRect.top - containerRect.top + 40;
+        
+        dragElement(tungtungFace, targetX, targetY, () => {
+            tungtungFace.style.transition = 'all 0.3s ease-out';
+            tungtungFace.style.transform = 'scale(0.8) rotate(-3deg)';
+            tungtungFace.style.filter = 'hue-rotate(180deg) brightness(1.5)';
+            tungtungFace.classList.add('glitch');
+            
+            messiHead.style.transition = 'all 0.3s ease-out';
+            messiHead.style.transform = 'scale(1.15) rotate(2deg)';
+            messiHead.classList.add('big-laugh');
             
             setTimeout(() => {
-                element.style.left = targetX + 'px';
-                element.style.top = targetY + 'px';
-                fingerPointer.style.left = targetX + 'px';
-                fingerPointer.style.top = targetY + 'px';
+                tungtungFace.style.transition = 'all 0.5s ease-in-out';
+                tungtungFace.style.transform = 'scale(1)';
+                tungtungFace.style.filter = 'none';
+                tungtungFace.classList.remove('glitch');
                 
-                setTimeout(() => {
-                    element.classList.remove('dragging');
-                    hideFingerPointer();
-                    if (onComplete) onComplete();
-                }, 500);
-            }, 300);
-        }
-
-        function failAttempt(element) {
-            element.classList.add('failed');
-            glitchOverlay.classList.add('active');
-            messiHead.classList.add('laugh');
-            
-            setTimeout(() => {
-                element.classList.remove('failed');
-                glitchOverlay.classList.remove('active');
-                messiHead.classList.remove('laugh');
+                messiHead.style.transform = 'scale(1)';
+                messiHead.classList.remove('big-laugh');
                 
-                // Reset position
-                element.style.left = (100 + currentAttempt * 100) + 'px';
-                element.style.top = 'auto';
-                element.style.bottom = '200px';
+                // Reset tungtung face
+                tungtungFace.style.left = '200px';
+                tungtungFace.style.top = 'auto';
+                tungtungFace.style.bottom = '200px';
             }, 800);
-        }
-
-        function successAttempt(element) {
-            element.classList.add('success');
-            setTimeout(() => {
-                element.classList.remove('success');
-            }, 500);
-        }
-
-        // Animation sequences
-        function runIntro() {
-            setTimeout(() => {
-                messiHead.classList.add('enter');
-                ronaldoHead.classList.add('enter');
-            }, 200);
-        }
-
-        function runMainGame() {
-            setTimeout(() => {
-                ronaldoSilhouette.classList.add('visible');
-                
-                // Start body part attempts
-                setTimeout(() => attemptBodyPart(0), 1000);
-                setTimeout(() => attemptBodyPart(1), 4000);
-                setTimeout(() => attemptBodyPart(2), 7000);
-                
-            }, timeline.mainGame.start);
-        }
-
-        function attemptBodyPart(index) {
-            if (index >= bodyParts.length) return;
-            
-            const part = bodyParts[index];
-            const silhouetteRect = ronaldoSilhouette.getBoundingClientRect();
-            const containerRect = document.querySelector('.container').getBoundingClientRect();
-            
-            const targetX = silhouetteRect.left - containerRect.left + 100;
-            const targetY = silhouetteRect.top - containerRect.top + 150;
-            
-            dragElement(part, targetX, targetY, () => {
-                failAttempt(part);
-                currentAttempt++;
-            });
-        }
-
-        function runTwist() {
-            setTimeout(() => {
-                const silhouetteRect = ronaldoSilhouette.getBoundingClientRect();
-                const containerRect = document.querySelector('.container').getBoundingClientRect();
-                
-                const targetX = silhouetteRect.left - containerRect.left + 100;
-                const targetY = silhouetteRect.top - containerRect.top + 50;
-                
-                dragElement(tungtungFace, targetX, targetY, () => {
-                    tungtungFace.classList.add('glitch');
-                    messiHead.classList.add('big-laugh');
-                    
-                    setTimeout(() => {
-                        tungtungFace.classList.remove('glitch');
-                        messiHead.classList.remove('big-laugh');
-                        
-                        // Reset tungtung face
-                        tungtungFace.style.left = '200px';
-                        tungtungFace.style.top = 'auto';
-                        tungtungFace.style.bottom = '200px';
-                    }, 1000);
-                });
-            }, timeline.twist.start);
-        }
-
-        function runVictory() {
-            setTimeout(() => {
-                const silhouetteRect = ronaldoSilhouette.getBoundingClientRect();
-                const containerRect = document.querySelector('.container').getBoundingClientRect();
-                
-                const targetX = silhouetteRect.left - containerRect.left + 100;
-                const targetY = silhouetteRect.top - containerRect.top + 50;
-                
-                dragElement(ronaldoHead, targetX, targetY, () => {
-                    successAttempt(ronaldoHead);
-                    ronaldoSilhouette.classList.add('complete');
-                    victoryGlow.classList.add('active');
-                    
-                    setTimeout(() => {
-                        victoryGlow.classList.remove('active');
-                    }, 2000);
-                });
-            }, timeline.victory.start);
-        }
-
-        function runOutro() {
-            setTimeout(() => {
-                socialIcons.classList.add('visible');
-            }, timeline.outro.start);
-        }
-
-        // Start animation
-        function startAnimation() {
-            animationStartTime = Date.now();
-            
-            runIntro();
-            runMainGame();
-            runTwist();
-            runVictory();
-            runOutro();
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            startAnimation();
         });
+    }, timeline.twist.start);
+}
 
-        // Restart animation on click (for testing)
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('container')) {
-                location.reload();
-            }
+function runVictory() {
+    setTimeout(() => {
+        const silhouetteRect = ronaldoSilhouette.getBoundingClientRect();
+        const containerRect = document.querySelector('.container').getBoundingClientRect();
+        
+        const targetX = silhouetteRect.left - containerRect.left + 80;
+        const targetY = silhouetteRect.top - containerRect.top + 40;
+        
+        dragElement(ronaldoHead, targetX, targetY, () => {
+            successAttempt(ronaldoHead);
+            
+            ronaldoSilhouette.style.transition = 'all 1s ease-out';
+            ronaldoSilhouette.style.filter = 'brightness(1.2) saturate(1.3)';
+            ronaldoSilhouette.classList.add('complete');
+            
+            victoryGlow.style.transition = 'all 0.8s ease-out';
+            victoryGlow.style.opacity = '1';
+            victoryGlow.style.transform = 'scale(1.2)';
+            victoryGlow.classList.add('active');
+            
+            setTimeout(() => {
+                victoryGlow.style.opacity = '0';
+                victoryGlow.style.transform = 'scale(1)';
+                victoryGlow.classList.remove('active');
+            }, 2000);
         });
+    }, timeline.victory.start);
+}
+
+function runOutro() {
+    setTimeout(() => {
+        socialIcons.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        socialIcons.style.opacity = '1';
+        socialIcons.style.transform = 'translateY(0) scale(1)';
+        socialIcons.classList.add('visible');
+    }, timeline.outro.start);
+}
+
+// Start animation
+function startAnimation() {
+    animationStartTime = Date.now();
+    
+    runIntro();
+    runMainGame();
+    runTwist();
+    runVictory();
+    runOutro();
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    startAnimation();
+});
+
+// Restart animation on click (for testing)
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('container')) {
+        location.reload();
+    }
+});
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Cartoon Generator</title>
+    <title>Football Animation Short</title>
     <style>
         * {
             margin: 0;
@@ -11,858 +11,514 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
         }
 
         .container {
-            max-width: 1400px;
+            width: 1080px;
+            height: 1920px;
+            position: relative;
             margin: 0 auto;
-            padding: 20px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            background-image: url('placeholder_background.png');
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            color: white;
+        /* Messi Head */
+        .messi-head {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            top: 100px;
+            left: -250px;
+            z-index: 10;
+            transition: all 0.8s ease-out;
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        .messi-head.enter {
+            left: 50px;
         }
 
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
+        .messi-head.laugh {
+            animation: laugh 0.5s ease-in-out;
         }
 
-        .tabs {
-            display: flex;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px 15px 0 0;
-            backdrop-filter: blur(10px);
-            margin-bottom: 0;
+        .messi-head.big-laugh {
+            animation: bigLaugh 0.8s ease-in-out;
         }
 
-        .tab {
-            flex: 1;
-            padding: 15px 20px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1rem;
+        /* Ronaldo Head */
+        .ronaldo-head {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            top: 100px;
+            right: -250px;
+            z-index: 10;
+            transition: all 0.8s ease-out;
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .ronaldo-head.enter {
+            right: 50px;
+        }
+
+        /* Ronaldo Silhouette */
+        .ronaldo-silhouette {
+            position: absolute;
+            width: 300px;
+            height: 400px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.5));
+        }
+
+        .ronaldo-silhouette.visible {
+            opacity: 1;
+        }
+
+        .ronaldo-silhouette.complete {
+            animation: celebration 2s ease-in-out;
+        }
+
+        /* Body Parts */
+        .body-part {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            bottom: 200px;
+            transition: all 0.3s ease-out;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 15px 15px 0 0;
+            z-index: 15;
         }
 
-        .tab.active {
-            background: white;
-            color: #333;
+        .body-part.dragging {
+            z-index: 20;
+            transform: scale(1.1);
+            filter: brightness(1.2);
         }
 
-        .tab:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.1);
+        .body-part.failed {
+            animation: failShake 0.5s ease-in-out;
         }
 
-        .tab-content {
-            display: none;
-            background: white;
-            border-radius: 0 0 15px 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        .body-part.success {
+            animation: successGlow 0.5s ease-in-out;
         }
 
-        .tab-content.active {
-            display: block;
+        /* Finger Pointer */
+        .finger-pointer {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            z-index: 25;
+            opacity: 0;
+            transition: all 0.2s ease-out;
+            pointer-events: none;
         }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 20px;
+        .finger-pointer.visible {
+            opacity: 1;
         }
 
-        .form-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #e9ecef;
+        /* Tungtung Face */
+        .tungtung-face {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            bottom: 200px;
+            left: 200px;
+            z-index: 15;
+            transition: all 0.3s ease-out;
+            border-radius: 50%;
         }
 
-        .form-section h3 {
-            margin-bottom: 15px;
-            color: #495057;
-            font-size: 1.2rem;
+        .tungtung-face.glitch {
+            animation: glitchEffect 0.8s ease-in-out;
         }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #495057;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
+        /* Glitch Overlay */
+        .glitch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
+            height: 100%;
+            background: rgba(255, 0, 0, 0.3);
+            z-index: 30;
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
+        .glitch-overlay.active {
+            animation: glitchFlash 0.3s ease-in-out;
         }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
+        /* Victory Effects */
+        .victory-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,215,0,0.3) 0%, transparent 70%);
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .slider-group {
+        .victory-glow.active {
+            animation: victoryPulse 2s ease-in-out;
+        }
+
+        /* Social Icons */
+        .social-icons {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 60px;
+            z-index: 40;
+            opacity: 0;
+        }
+
+        .social-icons.visible {
+            animation: socialFadeIn 0.5s ease-in-out forwards;
+        }
+
+        .social-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            font-size: 40px;
+            animation: socialBounce 0.5s ease-in-out;
         }
 
-        .slider {
-            flex: 1;
+        .social-icon:nth-child(1) { animation-delay: 0.1s; }
+        .social-icon:nth-child(2) { animation-delay: 0.2s; }
+        .social-icon:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Animations */
+        @keyframes laugh {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(-2deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-5px) rotate(2deg); }
         }
 
-        .slider-value {
-            min-width: 50px;
-            text-align: center;
-            font-weight: bold;
-            color: #667eea;
+        @keyframes bigLaugh {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            25% { transform: translateY(-15px) rotate(-3deg) scale(1.05); }
+            50% { transform: translateY(0) rotate(0deg) scale(1); }
+            75% { transform: translateY(-10px) rotate(3deg) scale(1.02); }
         }
 
-        .style-presets {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
+        @keyframes failShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
 
-        .style-btn {
-            padding: 10px 15px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
+        @keyframes successGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.5) drop-shadow(0 0 20px gold); }
         }
 
-        .style-btn:hover {
-            background: #5a6fd8;
-            transform: translateY(-2px);
+        @keyframes glitchEffect {
+            0%, 100% { transform: translate(0, 0); filter: hue-rotate(0deg); }
+            20% { transform: translate(-5px, 2px); filter: hue-rotate(90deg); }
+            40% { transform: translate(5px, -2px); filter: hue-rotate(180deg); }
+            60% { transform: translate(-2px, 5px); filter: hue-rotate(270deg); }
+            80% { transform: translate(2px, -5px); filter: hue-rotate(360deg); }
         }
 
-        .upload-area {
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-            padding: 40px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            background: #f8f9fa;
+        @keyframes glitchFlash {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
         }
 
-        .upload-area:hover {
-            border-color: #667eea;
-            background: #f0f2ff;
+        @keyframes celebration {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            25% { transform: translate(-50%, -60%) scale(1.1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+            75% { transform: translate(-50%, -55%) scale(1.08); }
+            100% { transform: translate(-50%, -50%) scale(1.1); }
         }
 
-        .upload-area.dragover {
-            border-color: #667eea;
-            background: #e8f0fe;
+        @keyframes victoryPulse {
+            0%, 100% { opacity: 0; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
-        .upload-preview {
-            max-width: 200px;
-            max-height: 200px;
-            margin: 20px auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        @keyframes socialFadeIn {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            100% { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
-        .generate-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
+        @keyframes socialBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        .generate-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .generate-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .result-section {
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .result-image {
-            max-width: 100%;
-            max-height: 500px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            margin: 20px 0;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #e9ecef;
-            border-radius: 3px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 3px;
-        }
-
-        .progress-bar.indeterminate .progress-fill {
-            width: 30%;
-            animation: indeterminate 2s infinite linear;
-        }
-
-        @keyframes indeterminate {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(400%); }
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .gallery-item {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .gallery-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .gallery-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .gallery-info {
-            padding: 15px;
-        }
-
-        .gallery-prompt {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .gallery-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-small {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-download {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-delete {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-small:hover {
-            opacity: 0.8;
-        }
-
-        .status-message {
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-weight: 500;
-        }
-
-        .status-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .status-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .status-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .tabs {
-                flex-direction: column;
-            }
-            
-            .style-presets {
-                grid-template-columns: 1fr;
+        /* Responsive scaling for smaller screens */
+        @media (max-width: 1080px) {
+            .container {
+                width: 100vw;
+                height: 100vh;
+                transform: scale(calc(100vw / 1080));
+                transform-origin: top left;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🎨 3D Cartoon Generator</h1>
-            <p>Create amazing 3D cartoon characters with AI - Upload, Clone, and Generate!</p>
-        </div>
+        <!-- Background Elements -->
+        <div class="victory-glow"></div>
+        <div class="glitch-overlay"></div>
 
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('text2img')">Text to Image</button>
-            <button class="tab" onclick="switchTab('clone')">Character Cloning</button>
-            <button class="tab" onclick="switchTab('gallery')">Gallery</button>
-        </div>
+        <!-- Character Heads -->
+        <img src="placeholder_messi_head.png" alt="Messi" class="messi-head" id="messiHead">
+        <img src="placeholder_ronaldo_head.png" alt="Ronaldo" class="ronaldo-head" id="ronaldoHead">
 
-        <!-- Text to Image Tab -->
-        <div id="text2img" class="tab-content active">
-            <div class="form-grid">
-                <div class="form-section">
-                    <h3>✨ Generation Settings</h3>
-                    
-                    <div class="form-group">
-                        <label for="prompt">Prompt:</label>
-                        <textarea id="prompt" placeholder="A cute 3D cartoon character, vibrant colors, Pixar style, high quality, detailed">A cute 3D cartoon character, vibrant colors, Pixar style, high quality, detailed</textarea>
-                    </div>
+        <!-- Ronaldo Silhouette -->
+        <img src="placeholder_ronaldo_silhouette.png" alt="Ronaldo Silhouette" class="ronaldo-silhouette" id="ronaldoSilhouette">
 
-                    <div class="form-group">
-                        <label for="negative-prompt">Negative Prompt:</label>
-                        <textarea id="negative-prompt" placeholder="blurry, low quality, distorted, ugly, bad anatomy">blurry, low quality, distorted, ugly, bad anatomy</textarea>
-                    </div>
+        <!-- Body Parts -->
+        <img src="placeholder_body_arm_left.png" alt="Left Arm" class="body-part" id="armLeft" style="left: 100px;">
+        <img src="placeholder_body_arm_right.png" alt="Right Arm" class="body-part" id="armRight" style="left: 200px;">
+        <img src="placeholder_body_leg_left.png" alt="Left Leg" class="body-part" id="legLeft" style="left: 300px;">
+        <img src="placeholder_body_leg_right.png" alt="Right Leg" class="body-part" id="legRight" style="left: 400px;">
+        <img src="placeholder_body_torso.png" alt="Torso" class="body-part" id="torso" style="left: 500px;">
 
-                    <div class="form-group">
-                        <label>3D Cartoon Styles:</label>
-                        <div class="style-presets">
-                            <button class="style-btn" onclick="addStyle('Pixar style, 3D cartoon')">Pixar Style</button>
-                            <button class="style-btn" onclick="addStyle('Disney 3D animation style')">Disney Style</button>
-                            <button class="style-btn" onclick="addStyle('DreamWorks 3D style')">DreamWorks</button>
-                            <button class="style-btn" onclick="addStyle('Cute chibi 3D character')">Chibi 3D</button>
-                            <button class="style-btn" onclick="addStyle('Realistic 3D cartoon')">Realistic 3D</button>
-                            <button class="style-btn" onclick="addStyle('Stylized 3D low-poly')">Low-Poly</button>
-                        </div>
-                    </div>
-                </div>
+        <!-- Tungtung Face -->
+        <img src="placeholder_tungtung_face.png" alt="Tungtung Face" class="tungtung-face" id="tungtungFace">
 
-                <div class="form-section">
-                    <h3>⚙️ Advanced Settings</h3>
-                    
-                    <div class="form-group">
-                        <label for="steps">Steps:</label>
-                        <div class="slider-group">
-                            <input type="range" id="steps" class="slider" min="10" max="50" value="20" oninput="updateSliderValue('steps')">
-                            <span id="steps-value" class="slider-value">20</span>
-                        </div>
-                    </div>
+        <!-- Finger Pointer -->
+        <img src="placeholder_finger_pointer.png" alt="Finger Pointer" class="finger-pointer" id="fingerPointer">
 
-                    <div class="form-group">
-                        <label for="cfg-scale">CFG Scale:</label>
-                        <div class="slider-group">
-                            <input type="range" id="cfg-scale" class="slider" min="1" max="20" step="0.5" value="7.5" oninput="updateSliderValue('cfg-scale')">
-                            <span id="cfg-scale-value" class="slider-value">7.5</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="image-size">Image Size:</label>
-                        <select id="image-size">
-                            <option value="512x512">512x512</option>
-                            <option value="768x768">768x768</option>
-                            <option value="512x768">512x768</option>
-                            <option value="768x512">768x512</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <button class="generate-btn" onclick="generateImage()" id="generate-btn">
-                🎨 Generate 3D Cartoon
-            </button>
-
-            <div class="progress-bar" id="progress-bar" style="display: none;">
-                <div class="progress-fill"></div>
-            </div>
-
-            <div class="result-section" id="result-section" style="display: none;">
-                <img id="result-image" class="result-image" alt="Generated image">
-                <br>
-                <button class="btn-small btn-download" onclick="downloadImage('result-image')">Download Image</button>
-            </div>
-        </div>
-
-        <!-- Character Cloning Tab -->
-        <div id="clone" class="tab-content">
-            <div class="form-grid">
-                <div class="form-section">
-                    <h3>📤 Upload Character</h3>
-                    
-                    <div class="upload-area" id="upload-area" onclick="document.getElementById('character-upload').click()">
-                        <div id="upload-content">
-                            <p>🖼️ Click to select or drag & drop character image</p>
-                            <p style="font-size: 14px; color: #666; margin-top: 10px;">Supports: PNG, JPG, JPEG, WebP</p>
-                        </div>
-                        <img id="character-preview" class="upload-preview" style="display: none;">
-                    </div>
-                    <input type="file" id="character-upload" accept="image/*" style="display: none;" onchange="handleCharacterUpload(event)">
-
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label>Character Analysis:</label>
-                        <textarea id="character-analysis" readonly placeholder="Upload an image to see AI analysis..."></textarea>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>🎭 Cloning Settings</h3>
-                    
-                    <div class="form-group">
-                        <label for="clone-prompt">Scene/Action Prompt:</label>
-                        <textarea id="clone-prompt" placeholder="same character, different pose, 3D cartoon style">same character, different pose, 3D cartoon style</textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="clone-strength">Cloning Strength:</label>
-                        <div class="slider-group">
-                            <input type="range" id="clone-strength" class="slider" min="0.1" max="1" step="0.05" value="0.75" oninput="updateSliderValue('clone-strength')">
-                            <span id="clone-strength-value" class="slider-value">0.75</span>
-                        </div>
-                        <small style="color: #666;">Higher values keep more of the original character</small>
-                    </div>
-                </div>
-            </div>
-
-            <button class="generate-btn" onclick="cloneCharacter()" id="clone-btn" disabled>
-                🎭 Clone Character
-            </button>
-
-            <div class="progress-bar" id="clone-progress-bar" style="display: none;">
-                <div class="progress-fill"></div>
-            </div>
-
-            <div class="result-section" id="clone-result-section" style="display: none;">
-                <img id="clone-result-image" class="result-image" alt="Cloned character">
-                <br>
-                <button class="btn-small btn-download" onclick="downloadImage('clone-result-image')">Download Image</button>
-            </div>
-        </div>
-
-        <!-- Gallery Tab -->
-        <div id="gallery" class="tab-content">
-            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 20px;">
-                <h3>🖼️ Generated Images</h3>
-                <button class="btn-small btn-delete" onclick="clearGallery()">Clear Gallery</button>
-            </div>
-            <div class="gallery" id="gallery-container">
-                <div style="grid-column: 1/-1; text-align: center; color: #666; padding: 40px;">
-                    No images generated yet. Create some amazing 3D cartoons!
-                </div>
-            </div>
+        <!-- Social Icons -->
+        <div class="social-icons" id="socialIcons">
+            <div class="social-icon">👍</div>
+            <div class="social-icon">💬</div>
+            <div class="social-icon">🔔</div>
         </div>
     </div>
 
-    <div id="status-container"></div>
-
     <script>
-        // Global variables
-        let generatedImages = [];
-        let currentCharacterImage = null;
+        // Animation timeline
+        const timeline = {
+            intro: { start: 0, end: 2000 },
+            mainGame: { start: 3000, end: 18000 },
+            twist: { start: 19000, end: 23000 },
+            victory: { start: 24000, end: 28000 },
+            outro: { start: 29000, end: 30000 }
+        };
 
-        // Tab switching
-        function switchTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
+        // Elements
+        const messiHead = document.getElementById('messiHead');
+        const ronaldoHead = document.getElementById('ronaldoHead');
+        const ronaldoSilhouette = document.getElementById('ronaldoSilhouette');
+        const fingerPointer = document.getElementById('fingerPointer');
+        const tungtungFace = document.getElementById('tungtungFace');
+        const socialIcons = document.getElementById('socialIcons');
+        const glitchOverlay = document.querySelector('.glitch-overlay');
+        const victoryGlow = document.querySelector('.victory-glow');
 
-            // Show selected tab
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+        const bodyParts = [
+            document.getElementById('armLeft'),
+            document.getElementById('armRight'),
+            document.getElementById('legLeft')
+        ];
+
+        let currentAttempt = 0;
+        let isDragging = false;
+        let animationStartTime = Date.now();
+
+        // Utility functions
+        function getTimeElapsed() {
+            return Date.now() - animationStartTime;
         }
 
-        // Slider value updates
-        function updateSliderValue(sliderId) {
-            const slider = document.getElementById(sliderId);
-            const valueDisplay = document.getElementById(sliderId + '-value');
-            valueDisplay.textContent = slider.value;
+        function showFingerPointer(x, y) {
+            fingerPointer.style.left = x + 'px';
+            fingerPointer.style.top = y + 'px';
+            fingerPointer.classList.add('visible');
         }
 
-        // Add style to prompt
-        function addStyle(style) {
-            const promptTextarea = document.getElementById('prompt');
-            const currentPrompt = promptTextarea.value;
-            if (!currentPrompt.includes(style)) {
-                promptTextarea.value = currentPrompt + ', ' + style;
-            }
+        function hideFingerPointer() {
+            fingerPointer.classList.remove('visible');
         }
 
-        // Show status message
-        function showStatus(message, type = 'info') {
-            const statusContainer = document.getElementById('status-container');
-            const statusDiv = document.createElement('div');
-            statusDiv.className = `status-message status-${type}`;
-            statusDiv.textContent = message;
-            statusContainer.appendChild(statusDiv);
-
+        function dragElement(element, targetX, targetY, onComplete) {
+            showFingerPointer(element.offsetLeft, element.offsetTop);
+            element.classList.add('dragging');
+            
             setTimeout(() => {
-                statusDiv.remove();
-            }, 5000);
-        }
-
-        // Generate image from text
-        async function generateImage() {
-            const generateBtn = document.getElementById('generate-btn');
-            const progressBar = document.getElementById('progress-bar');
-            const resultSection = document.getElementById('result-section');
-
-            try {
-                generateBtn.disabled = true;
-                generateBtn.textContent = '🎨 Generating...';
-                progressBar.style.display = 'block';
-                progressBar.classList.add('indeterminate');
-
-                const prompt = document.getElementById('prompt').value;
-                const negativePrompt = document.getElementById('negative-prompt').value;
-                const steps = document.getElementById('steps').value;
-                const cfgScale = document.getElementById('cfg-scale').value;
-                const imageSize = document.getElementById('image-size').value;
-
-                // Simulate API call (replace with actual backend call)
-                const response = await fetch('/api/generate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        prompt,
-                        negative_prompt: negativePrompt,
-                        steps: parseInt(steps),
-                        cfg_scale: parseFloat(cfgScale),
-                        size: imageSize
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Generation failed');
-                }
-
-                const data = await response.json();
+                element.style.left = targetX + 'px';
+                element.style.top = targetY + 'px';
+                fingerPointer.style.left = targetX + 'px';
+                fingerPointer.style.top = targetY + 'px';
                 
-                // Display result
-                const resultImage = document.getElementById('result-image');
-                resultImage.src = 'data:image/png;base64,' + data.image;
-                resultSection.style.display = 'block';
-
-                // Add to gallery
-                addToGallery(data.image, prompt, 'Generated');
-
-                showStatus('Image generated successfully!', 'success');
-
-            } catch (error) {
-                console.error('Generation error:', error);
-                showStatus('Failed to generate image. Make sure the backend is running.', 'error');
-            } finally {
-                generateBtn.disabled = false;
-                generateBtn.textContent = '🎨 Generate 3D Cartoon';
-                progressBar.style.display = 'none';
-                progressBar.classList.remove('indeterminate');
-            }
+                setTimeout(() => {
+                    element.classList.remove('dragging');
+                    hideFingerPointer();
+                    if (onComplete) onComplete();
+                }, 500);
+            }, 300);
         }
 
-        // Handle character upload
-        function handleCharacterUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                currentCharacterImage = e.target.result;
-                
-                // Show preview
-                const preview = document.getElementById('character-preview');
-                const uploadContent = document.getElementById('upload-content');
-                
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-                uploadContent.style.display = 'none';
-
-                // Enable clone button
-                document.getElementById('clone-btn').disabled = false;
-
-                // Analyze character
-                analyzeCharacter(e.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // Analyze character with AI
-        async function analyzeCharacter(imageData) {
-            try {
-                const response = await fetch('/api/analyze', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        image: imageData.split(',')[1] // Remove data:image/...;base64, prefix
-                    })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    document.getElementById('character-analysis').value = `Detected: ${data.description}`;
-                } else {
-                    document.getElementById('character-analysis').value = 'Analysis failed - but you can still clone the character!';
-                }
-            } catch (error) {
-                console.error('Analysis error:', error);
-                document.getElementById('character-analysis').value = 'Analysis unavailable - but you can still clone the character!';
-            }
-        }
-
-        // Clone character
-        async function cloneCharacter() {
-            if (!currentCharacterImage) {
-                showStatus('Please upload a character image first!', 'error');
-                return;
-            }
-
-            const cloneBtn = document.getElementById('clone-btn');
-            const progressBar = document.getElementById('clone-progress-bar');
-            const resultSection = document.getElementById('clone-result-section');
-
-            try {
-                cloneBtn.disabled = true;
-                cloneBtn.textContent = '🎭 Cloning...';
-                progressBar.style.display = 'block';
-                progressBar.classList.add('indeterminate');
-
-                const prompt = document.getElementById('clone-prompt').value;
-                const strength = document.getElementById('clone-strength').value;
-
-                const response = await fetch('/api/clone', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        image: currentCharacterImage.split(',')[1],
-                        prompt,
-                        strength: parseFloat(strength)
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Cloning failed');
-                }
-
-                const data = await response.json();
-                
-                // Display result
-                const resultImage = document.getElementById('clone-result-image');
-                resultImage.src = 'data:image/png;base64,' + data.image;
-                resultSection.style.display = 'block';
-
-                // Add to gallery
-                addToGallery(data.image, `Cloned: ${prompt}`, 'Cloned');
-
-                showStatus('Character cloned successfully!', 'success');
-
-            } catch (error) {
-                console.error('Cloning error:', error);
-                showStatus('Failed to clone character. Make sure the backend is running.', 'error');
-            } finally {
-                cloneBtn.disabled = false;
-                cloneBtn.textContent = '🎭 Clone Character';
-                progressBar.style.display = 'none';
-                progressBar.classList.remove('indeterminate');
-            }
-        }
-
-        // Add image to gallery
-        function addToGallery(imageBase64, prompt, type) {
-            const gallery = document.getElementById('gallery-container');
+        function failAttempt(element) {
+            element.classList.add('failed');
+            glitchOverlay.classList.add('active');
+            messiHead.classList.add('laugh');
             
-            // Remove "no images" message
-            if (generatedImages.length === 0) {
-                gallery.innerHTML = '';
-            }
-
-            const imageId = 'img_' + Date.now();
-            const galleryItem = document.createElement('div');
-            galleryItem.className = 'gallery-item';
-            galleryItem.innerHTML = `
-                <img src="data:image/png;base64,${imageBase64}" alt="${prompt}" class="gallery-image">
-                <div class="gallery-info">
-                    <div class="gallery-prompt">${prompt}</div>
-                    <div style="font-size: 12px; color: #999; margin-bottom: 10px;">
-                        ${type} • ${new Date().toLocaleString()}
-                    </div>
-                    <div class="gallery-actions">
-                        <button class="btn-small btn-download" onclick="downloadImage('${imageId}')">Download</button>
-                        <button class="btn-small btn-delete" onclick="removeFromGallery(this)">Delete</button>
-                    </div>
-                </div>
-            `;
-
-            // Add hidden img element for download
-            const hiddenImg = document.createElement('img');
-            hiddenImg.id = imageId;
-            hiddenImg.src = 'data:image/png;base64,' + imageBase64;
-            hiddenImg.style.display = 'none';
-            document.body.appendChild(hiddenImg);
-
-            gallery.appendChild(galleryItem);
-            generatedImages.push({id: imageId, element: galleryItem, image: imageBase64, prompt});
-        }
-
-        // Download image
-        function downloadImage(imageId) {
-            const img = document.getElementById(imageId);
-            const link = document.createElement('a');
-            link.download = `cartoon_${Date.now()}.png`;
-            link.href = img.src;
-            link.click();
-        }
-
-        // Remove from gallery
-        function removeFromGallery(button) {
-            const galleryItem = button.closest('.gallery-item');
-            galleryItem.remove();
-            
-            // Update array
-            generatedImages = generatedImages.filter(item => 
-                item.element !== galleryItem
-            );
-
-            // Show "no images" message if empty
-            if (generatedImages.length === 0) {
-                const gallery = document.getElementById('gallery-container');
-                gallery.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; color: #666; padding: 40px;">
-                        No images generated yet. Create some amazing 3D cartoons!
-                    </div>
-                `;
-            }
-        }
-
-        // Clear gallery
-        function clearGallery() {
-            if (confirm('Are you sure you want to clear all images?')) {
-                const gallery = document.getElementById('gallery-container');
-                gallery.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; color: #666; padding: 40px;">
-                        No images generated yet. Create some amazing 3D cartoons!
-                    </div>
-                `;
-                generatedImages = [];
+            setTimeout(() => {
+                element.classList.remove('failed');
+                glitchOverlay.classList.remove('active');
+                messiHead.classList.remove('laugh');
                 
-                // Remove hidden images
-                document.querySelectorAll('img[id^="img_"]').forEach(img => img.remove());
-            }
+                // Reset position
+                element.style.left = (100 + currentAttempt * 100) + 'px';
+                element.style.top = 'auto';
+                element.style.bottom = '200px';
+            }, 800);
         }
 
-        // Drag and drop functionality
-        const uploadArea = document.getElementById('upload-area');
+        function successAttempt(element) {
+            element.classList.add('success');
+            setTimeout(() => {
+                element.classList.remove('success');
+            }, 500);
+        }
 
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
+        // Animation sequences
+        function runIntro() {
+            setTimeout(() => {
+                messiHead.classList.add('enter');
+                ronaldoHead.classList.add('enter');
+            }, 200);
+        }
 
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
+        function runMainGame() {
+            setTimeout(() => {
+                ronaldoSilhouette.classList.add('visible');
+                
+                // Start body part attempts
+                setTimeout(() => attemptBodyPart(0), 1000);
+                setTimeout(() => attemptBodyPart(1), 4000);
+                setTimeout(() => attemptBodyPart(2), 7000);
+                
+            }, timeline.mainGame.start);
+        }
 
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
+        function attemptBodyPart(index) {
+            if (index >= bodyParts.length) return;
             
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                document.getElementById('character-upload').files = files;
-                handleCharacterUpload({target: {files}});
-            }
-        });
+            const part = bodyParts[index];
+            const silhouetteRect = ronaldoSilhouette.getBoundingClientRect();
+            const containerRect = document.querySelector('.container').getBoundingClientRect();
+            
+            const targetX = silhouetteRect.left - containerRect.left + 100;
+            const targetY = silhouetteRect.top - containerRect.top + 150;
+            
+            dragElement(part, targetX, targetY, () => {
+                failAttempt(part);
+                currentAttempt++;
+            });
+        }
+
+        function runTwist() {
+            setTimeout(() => {
+                const silhouetteRect = ronaldoSilhouette.getBoundingClientRect();
+                const containerRect = document.querySelector('.container').getBoundingClientRect();
+                
+                const targetX = silhouetteRect.left - containerRect.left + 100;
+                const targetY = silhouetteRect.top - containerRect.top + 50;
+                
+                dragElement(tungtungFace, targetX, targetY, () => {
+                    tungtungFace.classList.add('glitch');
+                    messiHead.classList.add('big-laugh');
+                    
+                    setTimeout(() => {
+                        tungtungFace.classList.remove('glitch');
+                        messiHead.classList.remove('big-laugh');
+                        
+                        // Reset tungtung face
+                        tungtungFace.style.left = '200px';
+                        tungtungFace.style.top = 'auto';
+                        tungtungFace.style.bottom = '200px';
+                    }, 1000);
+                });
+            }, timeline.twist.start);
+        }
+
+        function runVictory() {
+            setTimeout(() => {
+                const silhouetteRect = ronaldoSilhouette.getBoundingClientRect();
+                const containerRect = document.querySelector('.container').getBoundingClientRect();
+                
+                const targetX = silhouetteRect.left - containerRect.left + 100;
+                const targetY = silhouetteRect.top - containerRect.top + 50;
+                
+                dragElement(ronaldoHead, targetX, targetY, () => {
+                    successAttempt(ronaldoHead);
+                    ronaldoSilhouette.classList.add('complete');
+                    victoryGlow.classList.add('active');
+                    
+                    setTimeout(() => {
+                        victoryGlow.classList.remove('active');
+                    }, 2000);
+                });
+            }, timeline.victory.start);
+        }
+
+        function runOutro() {
+            setTimeout(() => {
+                socialIcons.classList.add('visible');
+            }, timeline.outro.start);
+        }
+
+        // Start animation
+        function startAnimation() {
+            animationStartTime = Date.now();
+            
+            runIntro();
+            runMainGame();
+            runTwist();
+            runVictory();
+            runOutro();
+        }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            showStatus('Welcome! Make sure your Python backend is running on the expected port.', 'info');
+        document.addEventListener('DOMContentLoaded', () => {
+            startAnimation();
+        });
+
+        // Restart animation on click (for testing)
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('container')) {
+                location.reload();
+            }
         });
     </script>
 </body>
 </html>
+

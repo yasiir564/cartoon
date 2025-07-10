@@ -7,208 +7,578 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
-        }
+body {
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
 
-        .container {
-            position: relative;
-            width: 1080px;
-            height: 1920px;
-            background: linear-gradient(180deg, #87CEEB 0%, #98FB98 100%);
-            overflow: hidden;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
+/* Animated background particles */
+.bg-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
 
-        /* Character Heads */
-        #messiHead {
-            position: absolute;
-            top: 100px;
-            left: 50px;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 5px solid #FFD700;
-            background: #FFF;
-            object-fit: cover;
-            opacity: 0;
-            transform: translateX(-300px);
-        }
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    animation: float 6s infinite ease-in-out;
+}
 
-        #ronaldoHead {
-            position: absolute;
-            top: 100px;
-            right: 50px;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 5px solid #FF6B6B;
-            background: #FFF;
-            object-fit: cover;
-            opacity: 0;
-            transform: translateX(300px);
-        }
+.particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+.particle:nth-child(2) { left: 20%; animation-delay: 1s; }
+.particle:nth-child(3) { left: 30%; animation-delay: 2s; }
+.particle:nth-child(4) { left: 40%; animation-delay: 3s; }
+.particle:nth-child(5) { left: 50%; animation-delay: 4s; }
+.particle:nth-child(6) { left: 60%; animation-delay: 5s; }
+.particle:nth-child(7) { left: 70%; animation-delay: 2.5s; }
+.particle:nth-child(8) { left: 80%; animation-delay: 1.5s; }
+.particle:nth-child(9) { left: 90%; animation-delay: 3.5s; }
 
-        /* Ronaldo Silhouette */
-        #ronaldoSilhouette {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 400px;
-            opacity: 0;
-            filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
-        }
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+    50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+}
 
-        /* Body Parts */
-        .bodyPart {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            cursor: grab;
-            border-radius: 10px;
-            background: #FFF;
-            border: 3px solid #4ECDC4;
-            object-fit: cover;
-            opacity: 0;
-            transform: scale(0.5);
-        }
+.container {
+    position: relative;
+    width: 100vw;
+    max-width: 430px;
+    height: 100vh;
+    margin: 0 auto;
+    background: linear-gradient(180deg, 
+        rgba(135, 206, 235, 0.9) 0%, 
+        rgba(152, 251, 152, 0.9) 50%, 
+        rgba(255, 182, 193, 0.9) 100%);
+    backdrop-filter: blur(10px);
+    border-radius: 0;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    z-index: 2;
+}
 
-        #armLeft {
-            bottom: 300px;
-            left: 100px;
-        }
+/* Header Section */
+.header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    z-index: 10;
+}
 
-        #armRight {
-            bottom: 400px;
-            left: 200px;
-        }
+.score-display {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+    animation: pulse 2s infinite;
+}
 
-        #legLeft {
-            bottom: 200px;
-            left: 150px;
-        }
+@keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3); }
+    50% { transform: scale(1.05); box-shadow: 0 12px 35px rgba(79, 172, 254, 0.5); }
+}
 
-        #legRight {
-            bottom: 250px;
-            left: 50px;
-        }
+.menu-button {
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-        #torso {
-            bottom: 350px;
-            left: 250px;
-        }
+.menu-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
 
-        /* Tungtung Face */
-        #tungtungFace {
-            position: absolute;
-            bottom: 450px;
-            right: 100px;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 4px solid #FF69B4;
-            background: #FFF;
-            object-fit: cover;
-            opacity: 0;
-            transform: scale(0.5);
-        }
+.menu-button::before {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background: white;
+    box-shadow: 0 6px 0 white, 0 -6px 0 white;
+    border-radius: 2px;
+}
 
-        /* Finger Pointer */
-        #fingerPointer {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            opacity: 0;
-            z-index: 10;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
+/* Character Heads */
+#messiHead {
+    position: absolute;
+    top: 140px;
+    left: 30px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #FFD700;
+    background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+    opacity: 0;
+    transform: translateX(-200px) scale(0.8);
+    animation: slideInLeft 1s ease-out 0.5s forwards;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-        /* Ronaldo Celebration */
-        #ronaldoCelebration {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 350px;
-            height: 450px;
-            opacity: 0;
-            filter: drop-shadow(0 0 30px rgba(255,215,0,0.8));
-        }
+#messiHead:hover {
+    transform: translateX(0) scale(1.1);
+    box-shadow: 0 15px 40px rgba(255, 215, 0, 0.5);
+}
 
-        /* Social Icons */
-        #socialIcons {
-            position: absolute;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 80px;
-            opacity: 0;
-        }
+#ronaldoHead {
+    position: absolute;
+    top: 140px;
+    right: 30px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #FF6B6B;
+    background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
+    box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+    opacity: 0;
+    transform: translateX(200px) scale(0.8);
+    animation: slideInRight 1s ease-out 0.7s forwards;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-        #socialIcons img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #FFF;
-            padding: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transform: scale(0);
-        }
+#ronaldoHead:hover {
+    transform: translateX(0) scale(1.1);
+    box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
+}
 
-        /* Glitch Effect */
-        .glitch {
-            animation: glitch 0.5s ease-in-out;
-        }
+@keyframes slideInLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
 
-        @keyframes glitch {
-            0% { transform: translate(0, 0) scale(1); }
-            10% { transform: translate(-5px, 2px) scale(1.05); }
-            20% { transform: translate(3px, -3px) scale(0.95); }
-            30% { transform: translate(-2px, 1px) scale(1.02); }
-            40% { transform: translate(4px, -1px) scale(0.98); }
-            50% { transform: translate(-3px, 3px) scale(1.01); }
-            60% { transform: translate(2px, -2px) scale(0.99); }
-            70% { transform: translate(-1px, 4px) scale(1.03); }
-            80% { transform: translate(1px, -4px) scale(0.97); }
-            90% { transform: translate(-4px, 1px) scale(1.01); }
-            100% { transform: translate(0, 0) scale(1); }
-        }
+@keyframes slideInRight {
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
 
-        /* Success Glow */
-        .success-glow {
-            animation: successGlow 2s ease-in-out;
-        }
+/* Main Game Area */
+.game-area {
+    position: absolute;
+    top: 240px;
+    left: 0;
+    right: 0;
+    bottom: 200px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
-        @keyframes successGlow {
-            0% { filter: drop-shadow(0 0 10px rgba(255,215,0,0.3)); }
-            50% { filter: drop-shadow(0 0 50px rgba(255,215,0,1)); }
-            100% { filter: drop-shadow(0 0 30px rgba(255,215,0,0.8)); }
-        }
+/* Ronaldo Silhouette */
+#ronaldoSilhouette {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 280px;
+    opacity: 0;
+    filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.3));
+    animation: fadeInScale 1.2s ease-out 1s forwards;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%);
+    border-radius: 20px;
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+}
 
-        /* Placeholder styling for missing images */
-        img {
-            background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
-                        linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
-                        linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
-                        linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-        }
+@keyframes fadeInScale {
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Body Parts */
+.body-parts-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.1) 100%);
+    backdrop-filter: blur(5px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.bodyPart {
+    width: 60px;
+    height: 60px;
+    cursor: grab;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
+    border: 2px solid #4ECDC4;
+    box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
+    opacity: 0;
+    transform: scale(0.5) rotate(10deg);
+    animation: popIn 0.6s ease-out forwards;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.bodyPart::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+.bodyPart:hover {
+    transform: scale(1.1) rotate(0deg);
+    box-shadow: 0 12px 35px rgba(78, 205, 196, 0.5);
+}
+
+.bodyPart:active {
+    cursor: grabbing;
+    transform: scale(0.95) rotate(-5deg);
+}
+
+#armLeft { animation-delay: 1.2s; }
+#armRight { animation-delay: 1.4s; }
+#legLeft { animation-delay: 1.6s; }
+#legRight { animation-delay: 1.8s; }
+#torso { animation-delay: 2s; }
+
+@keyframes popIn {
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Tungtung Face */
+#tungtungFace {
+    position: absolute;
+    bottom: 220px;
+    right: 30px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid #FF69B4;
+    background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
+    box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+    opacity: 0;
+    transform: scale(0.5) rotate(180deg);
+    animation: spinIn 1s ease-out 2.2s forwards;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#tungtungFace:hover {
+    transform: scale(1.1) rotate(0deg);
+    box-shadow: 0 15px 40px rgba(255, 105, 180, 0.5);
+}
+
+@keyframes spinIn {
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Finger Pointer */
+#fingerPointer {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    opacity: 0;
+    z-index: 15;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+    border-radius: 50%;
+    animation: pointPulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pointPulse {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+/* Ronaldo Celebration */
+#ronaldoCelebration {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 320px;
+    opacity: 0;
+    filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.3) 100%);
+    border-radius: 20px;
+    border: 3px solid #FFD700;
+    animation: celebrationEntry 2s ease-out forwards;
+}
+
+@keyframes celebrationEntry {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.3) rotate(180deg);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.2) rotate(10deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    }
+}
+
+/* Social Icons */
+#socialIcons {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 40px;
+    opacity: 0;
+    animation: slideUp 1s ease-out 3s forwards;
+}
+
+#socialIcons .social-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0);
+    animation: iconPop 0.6s ease-out forwards;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+#socialIcons .social-icon::before {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    border-radius: 50%;
+}
+
+#socialIcons .social-icon:nth-child(1) { animation-delay: 3.2s; }
+#socialIcons .social-icon:nth-child(2) { animation-delay: 3.4s; }
+#socialIcons .social-icon:nth-child(3) { animation-delay: 3.6s; }
+
+#socialIcons .social-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes iconPop {
+    to {
+        transform: scale(1);
+    }
+}
+
+/* Glitch Effect */
+.glitch {
+    animation: glitch 0.5s ease-in-out;
+}
+
+@keyframes glitch {
+    0% { transform: translate(0, 0) scale(1); filter: hue-rotate(0deg); }
+    10% { transform: translate(-3px, 2px) scale(1.02); filter: hue-rotate(90deg); }
+    20% { transform: translate(2px, -2px) scale(0.98); filter: hue-rotate(180deg); }
+    30% { transform: translate(-1px, 1px) scale(1.01); filter: hue-rotate(270deg); }
+    40% { transform: translate(3px, -1px) scale(0.99); filter: hue-rotate(360deg); }
+    50% { transform: translate(-2px, 2px) scale(1.01); filter: hue-rotate(45deg); }
+    60% { transform: translate(1px, -3px) scale(0.99); filter: hue-rotate(135deg); }
+    70% { transform: translate(-1px, 3px) scale(1.02); filter: hue-rotate(225deg); }
+    80% { transform: translate(2px, -1px) scale(0.98); filter: hue-rotate(315deg); }
+    90% { transform: translate(-3px, 1px) scale(1.01); filter: hue-rotate(90deg); }
+    100% { transform: translate(0, 0) scale(1); filter: hue-rotate(0deg); }
+}
+
+/* Success Glow */
+.success-glow {
+    animation: successGlow 2s ease-in-out;
+}
+
+@keyframes successGlow {
+    0% { 
+        filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+        transform: scale(1);
+    }
+    50% { 
+        filter: drop-shadow(0 0 50px rgba(255, 215, 0, 1));
+        transform: scale(1.05);
+    }
+    100% { 
+        filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
+        transform: scale(1);
+    }
+}
+
+/* Progress Bar */
+.progress-container {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    width: 0%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    position: relative;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Responsive Design */
+@media (max-width: 430px) {
+    .container {
+        max-width: 100vw;
+        border-radius: 0;
+    }
+    
+    .header {
+        padding: 15px;
+    }
+    
+    .score-display {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+    
+    #messiHead, #ronaldoHead {
+        width: 70px;
+        height: 70px;
+    }
+    
+    #ronaldoSilhouette {
+        width: 180px;
+        height: 250px;
+    }
+    
+    .bodyPart {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .body-parts-container {
+        height: 180px;
+        gap: 10px;
+    }
+}
+
+@media (max-height: 700px) {
+    .game-area {
+        top: 200px;
+        bottom: 160px;
+    }
+    
+    .body-parts-container {
+        height: 160px;
+    }
+    
+    #ronaldoSilhouette {
+        width: 160px;
+        height: 220px;
+    }
+}
+
+/* Touch feedback */
+@media (hover: none) {
+    .bodyPart:active {
+        transform: scale(0.95);
+        box-shadow: 0 4px 15px rgba(78, 205, 196, 0.6);
+    }
+    
+    #messiHead:active, #ronaldoHead:active, #tungtungFace:active {
+        transform: scale(0.95);
+    }
+}
     </style>
 </head>
 <body>

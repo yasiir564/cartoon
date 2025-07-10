@@ -3,1368 +3,416 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Football Animation Short</title>
+    <title>Ronaldo Assembly Game</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
-/* Modern Interactive Game CSS - 1920x1080 Layout */
-
-/* CSS Variables for consistent theming */
-:root {
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    --error-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-    --gold-gradient: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-    --dark-gradient: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-    --glass-bg: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(255, 255, 255, 0.2);
-    --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.1);
-    --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
-    --shadow-hard: 0 20px 60px rgba(0, 0, 0, 0.3);
-    --border-radius: 16px;
-    --border-radius-lg: 24px;
-    --transition-fast: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-medium: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    --backdrop-blur: blur(20px);
-    --backdrop-blur-strong: blur(40px);
-}
-
-/* Reset and Base Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body, html {
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: var(--primary-gradient);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: 'liga' 1, 'kern' 1;
-}
-
-/* Main Container - Fixed 1920x1080 */
-.container {
-    width: 1920px;
-    height: 1080px;
-    position: relative;
-    margin: 0 auto;
-    background: var(--primary-gradient);
-    background-image: 
-        radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.4) 0%, transparent 50%),
-        radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.4) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
-    background-size: 100% 100%;
-    background-position: center;
-    overflow: hidden;
-    backdrop-filter: var(--backdrop-blur);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-hard);
-    transform-style: preserve-3d;
-}
-
-.container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        135deg, 
-        transparent 0%, 
-        rgba(255, 255, 255, 0.03) 25%, 
-        transparent 50%, 
-        rgba(255, 255, 255, 0.03) 75%, 
-        transparent 100%
-    );
-    pointer-events: none;
-    z-index: 1;
-}
-
-/* Messi Head */
-.messi-head {
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    top: 120px;
-    left: -200px;
-    z-index: 10;
-    transition: var(--transition-slow);
-    border-radius: 50%;
-    box-shadow: var(--shadow-medium);
-    backdrop-filter: var(--backdrop-blur-strong);
-    border: 3px solid var(--glass-border);
-    background: 
-        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 70%),
-        var(--glass-bg);
-    transform: scale(0.8);
-    opacity: 0;
-    overflow: hidden;
-}
-
-.messi-head::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    animation: shimmer 2s infinite;
-}
-
-.messi-head.enter {
-    left: 80px;
-    transform: scale(1);
-    opacity: 1;
-    animation: messiEntrance 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.messi-head.laugh {
-    animation: modernLaugh 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.messi-head.big-laugh {
-    animation: modernBigLaugh 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Ronaldo Head */
-.ronaldo-head {
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    top: 120px;
-    right: -200px;
-    z-index: 10;
-    transition: var(--transition-slow);
-    border-radius: 50%;
-    box-shadow: var(--shadow-medium);
-    backdrop-filter: var(--backdrop-blur-strong);
-    border: 3px solid var(--glass-border);
-    background: 
-        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 70%),
-        var(--glass-bg);
-    transform: scale(0.8);
-    opacity: 0;
-    overflow: hidden;
-}
-
-.ronaldo-head::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    animation: shimmer 2s infinite reverse;
-}
-
-.ronaldo-head.enter {
-    right: 80px;
-    transform: scale(1);
-    opacity: 1;
-    animation: ronaldoEntrance 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Ronaldo Silhouette */
-.ronaldo-silhouette {
-    position: absolute;
-    width: 400px;
-    height: 500px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.8);
-    z-index: 5;
-    opacity: 0;
-    transition: var(--transition-medium);
-    filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.5));
-    border-radius: var(--border-radius-lg);
-    background: 
-        linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%),
-        var(--glass-bg);
-    backdrop-filter: var(--backdrop-blur-strong);
-    border: 2px solid var(--glass-border);
-}
-
-.ronaldo-silhouette.visible {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-}
-
-.ronaldo-silhouette.complete {
-    animation: modernCelebration 2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Body Parts */
-.body-part {
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    bottom: 150px;
-    transition: var(--transition-fast);
-    cursor: pointer;
-    z-index: 15;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: var(--backdrop-blur);
-    border: 2px solid var(--glass-border);
-    background: 
-        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%),
-        var(--glass-bg);
-    transform: scale(0.9);
-    opacity: 0;
-    animation: bodyPartSpawn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-    overflow: hidden;
-}
-
-.body-part::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    border-radius: var(--border-radius);
-    opacity: 0;
-    transition: var(--transition-fast);
-}
-
-.body-part:nth-child(odd) {
-    animation-delay: 0.1s;
-}
-
-.body-part:nth-child(even) {
-    animation-delay: 0.2s;
-}
-
-.body-part:hover {
-    transform: scale(1.1) translateY(-8px);
-    box-shadow: var(--shadow-medium);
-    border-color: rgba(255, 255, 255, 0.5);
-}
-
-.body-part:hover::before {
-    opacity: 1;
-}
-
-.body-part.dragging {
-    z-index: 20;
-    transform: scale(1.2) rotate(8deg);
-    filter: brightness(1.4);
-    box-shadow: var(--shadow-hard);
-    border-color: rgba(255, 255, 255, 0.8);
-}
-
-.body-part.failed {
-    animation: modernFailShake 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.body-part.success {
-    animation: modernSuccessGlow 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Finger Pointer */
-.finger-pointer {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    z-index: 25;
-    opacity: 0;
-    transition: var(--transition-fast);
-    pointer-events: none;
-    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.9));
-}
-
-.finger-pointer.visible {
-    opacity: 1;
-    animation: fingerPulse 1.8s ease-in-out infinite;
-}
-
-/* Tungtung Face */
-.tungtung-face {
-    position: absolute;
-    width: 120px;
-    height: 120px;
-    bottom: 150px;
-    left: 300px;
-    z-index: 15;
-    transition: var(--transition-fast);
-    border-radius: 50%;
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: var(--backdrop-blur);
-    border: 3px solid var(--glass-border);
-    background: 
-        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%),
-        var(--glass-bg);
-}
-
-.tungtung-face.glitch {
-    animation: modernGlitchEffect 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Glitch Overlay */
-.glitch-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--error-gradient);
-    z-index: 30;
-    opacity: 0;
-    pointer-events: none;
-    backdrop-filter: var(--backdrop-blur-strong);
-    mix-blend-mode: overlay;
-    border-radius: var(--border-radius-lg);
-}
-
-.glitch-overlay.active {
-    animation: modernGlitchFlash 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Victory Effects */
-.victory-glow {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--gold-gradient);
-    z-index: 1;
-    opacity: 0;
-    pointer-events: none;
-    border-radius: var(--border-radius-lg);
-    backdrop-filter: var(--backdrop-blur);
-    mix-blend-mode: overlay;
-}
-
-.victory-glow.active {
-    animation: modernVictoryPulse 3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Social Icons */
-.social-icons {
-    position: absolute;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 80px;
-    z-index: 40;
-    opacity: 0;
-}
-
-.social-icons.visible {
-    animation: modernSocialFadeIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-}
-
-.social-icon {
-    width: 100px;
-    height: 100px;
-    background: var(--glass-bg);
-    backdrop-filter: var(--backdrop-blur-strong);
-    border: 2px solid var(--glass-border);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 48px;
-    transition: var(--transition-fast);
-    cursor: pointer;
-    box-shadow: var(--shadow-soft);
-    position: relative;
-    overflow: hidden;
-}
-
-.social-icon::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: var(--transition-fast);
-}
-
-.social-icon:hover {
-    transform: translateY(-15px) scale(1.15);
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.6);
-    box-shadow: var(--shadow-medium);
-}
-
-.social-icon:hover::before {
-    left: 100%;
-}
-
-.social-icon:nth-child(1) { 
-    animation: modernSocialBounce 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    animation-delay: 0.1s; 
-}
-
-.social-icon:nth-child(2) { 
-    animation: modernSocialBounce 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    animation-delay: 0.2s; 
-}
-
-.social-icon:nth-child(3) { 
-    animation: modernSocialBounce 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    animation-delay: 0.3s; 
-}
-
-/* Game UI Elements */
-.game-header {
-    position: absolute;
-    top: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 30;
-    background: var(--glass-bg);
-    backdrop-filter: var(--backdrop-blur-strong);
-    border: 2px solid var(--glass-border);
-    border-radius: var(--border-radius-lg);
-    padding: 20px 40px;
-    box-shadow: var(--shadow-soft);
-    font-size: 24px;
-    font-weight: 600;
-    color: white;
-    text-align: center;
-}
-
-.game-footer {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 30;
-    background: var(--glass-bg);
-    backdrop-filter: var(--backdrop-blur-strong);
-    border: 2px solid var(--glass-border);
-    border-radius: var(--border-radius);
-    padding: 15px 30px;
-    box-shadow: var(--shadow-soft);
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.8);
-    text-align: center;
-}
-
-/* Modern Animations */
-@keyframes shimmer {
-    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-}
-
-@keyframes messiEntrance {
-    0% { 
-        transform: scale(0.3) rotate(-270deg) translateX(-50px);
-        opacity: 0;
-        filter: blur(10px);
-    }
-    50% { 
-        transform: scale(1.2) rotate(-135deg) translateX(0);
-        opacity: 0.8;
-        filter: blur(2px);
-    }
-    100% { 
-        transform: scale(1) rotate(0deg) translateX(0);
-        opacity: 1;
-        filter: blur(0);
-    }
-}
-
-@keyframes ronaldoEntrance {
-    0% { 
-        transform: scale(0.3) rotate(270deg) translateX(50px);
-        opacity: 0;
-        filter: blur(10px);
-    }
-    50% { 
-        transform: scale(1.2) rotate(135deg) translateX(0);
-        opacity: 0.8;
-        filter: blur(2px);
-    }
-    100% { 
-        transform: scale(1) rotate(0deg) translateX(0);
-        opacity: 1;
-        filter: blur(0);
-    }
-}
-
-@keyframes modernLaugh {
-    0%, 100% { 
-        transform: translateY(0) rotate(0deg) scale(1);
-        filter: brightness(1);
-    }
-    25% { 
-        transform: translateY(-20px) rotate(-5deg) scale(1.08);
-        filter: brightness(1.2);
-    }
-    50% { 
-        transform: translateY(-8px) rotate(0deg) scale(1.04);
-        filter: brightness(1.1);
-    }
-    75% { 
-        transform: translateY(-15px) rotate(5deg) scale(1.06);
-        filter: brightness(1.15);
-    }
-}
-
-@keyframes modernBigLaugh {
-    0%, 100% { 
-        transform: translateY(0) rotate(0deg) scale(1);
-        filter: brightness(1);
-    }
-    20% { 
-        transform: translateY(-30px) rotate(-8deg) scale(1.15);
-        filter: brightness(1.3);
-    }
-    40% { 
-        transform: translateY(-15px) rotate(0deg) scale(1.08);
-        filter: brightness(1.2);
-    }
-    60% { 
-        transform: translateY(-25px) rotate(8deg) scale(1.12);
-        filter: brightness(1.25);
-    }
-    80% { 
-        transform: translateY(-10px) rotate(-3deg) scale(1.05);
-        filter: brightness(1.1);
-    }
-}
-
-@keyframes bodyPartSpawn {
-    0% {
-        transform: scale(0) rotate(180deg) translateY(50px);
-        opacity: 0;
-        filter: blur(5px);
-    }
-    50% {
-        transform: scale(1.15) rotate(90deg) translateY(0);
-        opacity: 0.8;
-        filter: blur(1px);
-    }
-    100% {
-        transform: scale(1) rotate(0deg) translateY(0);
-        opacity: 1;
-        filter: blur(0);
-    }
-}
-
-@keyframes modernFailShake {
-    0%, 100% { 
-        transform: translateX(0) rotate(0deg);
-        filter: brightness(1);
-    }
-    15% { 
-        transform: translateX(-20px) rotate(-5deg);
-        filter: brightness(1.2) hue-rotate(30deg);
-    }
-    30% { 
-        transform: translateX(20px) rotate(5deg);
-        filter: brightness(0.8) hue-rotate(-30deg);
-    }
-    45% { 
-        transform: translateX(-15px) rotate(-3deg);
-        filter: brightness(1.1) hue-rotate(15deg);
-    }
-    60% { 
-        transform: translateX(15px) rotate(3deg);
-        filter: brightness(0.9) hue-rotate(-15deg);
-    }
-    75% { 
-        transform: translateX(-8px) rotate(-1deg);
-        filter: brightness(1.05) hue-rotate(8deg);
-    }
-}
-
-@keyframes modernSuccessGlow {
-    0%, 100% { 
-        filter: brightness(1) drop-shadow(0 0 0px gold);
-        transform: scale(1) rotate(0deg);
-    }
-    25% { 
-        filter: brightness(1.4) drop-shadow(0 0 25px gold);
-        transform: scale(1.08) rotate(-3deg);
-    }
-    50% { 
-        filter: brightness(1.6) drop-shadow(0 0 40px gold);
-        transform: scale(1.15) rotate(0deg);
-    }
-    75% { 
-        filter: brightness(1.5) drop-shadow(0 0 35px gold);
-        transform: scale(1.1) rotate(3deg);
-    }
-}
-
-@keyframes modernGlitchEffect {
-    0%, 100% { 
-        transform: translate(0, 0) scale(1);
-        filter: hue-rotate(0deg) brightness(1) contrast(1);
-    }
-    10% { 
-        transform: translate(-12px, 5px) scale(1.03);
-        filter: hue-rotate(90deg) brightness(1.3) contrast(1.2);
-    }
-    20% { 
-        transform: translate(12px, -5px) scale(0.97);
-        filter: hue-rotate(180deg) brightness(0.7) contrast(0.8);
-    }
-    30% { 
-        transform: translate(-5px, 12px) scale(1.05);
-        filter: hue-rotate(270deg) brightness(1.5) contrast(1.5);
-    }
-    40% { 
-        transform: translate(5px, -12px) scale(0.95);
-        filter: hue-rotate(360deg) brightness(0.5) contrast(0.5);
-    }
-    50% { 
-        transform: translate(-8px, 8px) scale(1.02);
-        filter: hue-rotate(180deg) brightness(1.8) contrast(1.8);
-    }
-    60% { 
-        transform: translate(8px, -8px) scale(0.98);
-        filter: hue-rotate(90deg) brightness(0.3) contrast(0.3);
-    }
-    70% { 
-        transform: translate(-3px, 3px) scale(1.04);
-        filter: hue-rotate(270deg) brightness(2) contrast(2);
-    }
-    80% { 
-        transform: translate(3px, -3px) scale(0.96);
-        filter: hue-rotate(0deg) brightness(0.1) contrast(0.1);
-    }
-    90% { 
-        transform: translate(-1px, 1px) scale(1.01);
-        filter: hue-rotate(45deg) brightness(1.3) contrast(1.3);
-    }
-}
-
-@keyframes modernGlitchFlash {
-    0%, 100% { 
-        opacity: 0;
-        transform: scale(1);
-    }
-    20% { 
-        opacity: 0.9;
-        transform: scale(1.08);
-    }
-    40% { 
-        opacity: 0.2;
-        transform: scale(0.92);
-    }
-    60% { 
-        opacity: 1;
-        transform: scale(1.12);
-    }
-    80% { 
-        opacity: 0.1;
-        transform: scale(0.88);
-    }
-}
-
-@keyframes modernCelebration {
-    0% { 
-        transform: translate(-50%, -50%) scale(1) rotate(0deg);
-        filter: brightness(1) saturate(1);
-    }
-    25% { 
-        transform: translate(-50%, -60%) scale(1.2) rotate(-8deg);
-        filter: brightness(1.4) saturate(1.3);
-    }
-    50% { 
-        transform: translate(-50%, -45%) scale(1.3) rotate(0deg);
-        filter: brightness(1.6) saturate(1.5);
-    }
-    75% { 
-        transform: translate(-50%, -55%) scale(1.15) rotate(8deg);
-        filter: brightness(1.5) saturate(1.4);
-    }
-    100% { 
-        transform: translate(-50%, -50%) scale(1.35) rotate(0deg);
-        filter: brightness(1.8) saturate(1.6);
-    }
-}
-
-@keyframes modernVictoryPulse {
-    0%, 100% { 
-        opacity: 0;
-        transform: scale(0.5);
-    }
-    25% { 
-        opacity: 0.5;
-        transform: scale(1.2);
-    }
-    50% { 
-        opacity: 0.9;
-        transform: scale(1.8);
-    }
-    75% { 
-        opacity: 0.7;
-        transform: scale(1.5);
-    }
-}
-
-@keyframes modernSocialFadeIn {
-    0% { 
-        opacity: 0;
-        transform: translateX(-50%) translateY(80px) scale(0.6);
-        filter: blur(5px);
-    }
-    100% { 
-        opacity: 1;
-        transform: translateX(-50%) translateY(0) scale(1);
-        filter: blur(0);
-    }
-}
-
-@keyframes modernSocialBounce {
-    0%, 100% { 
-        transform: translateY(0) scale(1);
-    }
-    50% { 
-        transform: translateY(-30px) scale(1.15);
-    }
-}
-
-@keyframes fingerPulse {
-    0%, 100% { 
-        transform: scale(1);
-        filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.9));
-    }
-    50% { 
-        transform: scale(1.3);
-        filter: drop-shadow(0 0 30px rgba(255, 255, 255, 1));
-    }
-}
-
-/* Particle Effects */
-.particle {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 5;
-    animation: particleFloat 4s ease-in-out infinite;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-
-@keyframes particleFloat {
-    0%, 100% { 
-        transform: translateY(0) rotate(0deg) scale(1);
-        opacity: 0;
-    }
-    10% { 
-        opacity: 1;
-        transform: scale(1.2);
-    }
-    90% { 
-        opacity: 1;
-        transform: scale(0.8);
-    }
-    100% { 
-        transform: translateY(-150px) rotate(360deg) scale(0);
-        opacity: 0;
-    }
-}
-
-/* Loading Animation */
-.loading-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80px;
-    height: 80px;
-    border: 6px solid rgba(255, 255, 255, 0.2);
-    border-top: 6px solid rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    z-index: 50;
-    backdrop-filter: var(--backdrop-blur);
-}
-
-@keyframes spin {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-/* Responsive Design for 1920x1080 */
-@media (max-width: 1920px) {
-    .container {
-        width: 100vw;
-        height: 100vh;
-        max-width: 1920px;
-        max-height: 1080px;
-        transform: scale(calc(min(100vw / 1920, 100vh / 1080)));
-        transform-origin: center center;
-    }
-}
-
-/* High Performance Mode */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-}
-
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --primary-gradient: var(--dark-gradient);
-        --glass-bg: rgba(255, 255, 255, 0.05);
-        --glass-border: rgba(255, 255, 255, 0.1);
-    }
-    
-    .container {
-        background: var(--dark-gradient);
-        background-image: 
-            radial-gradient(circle at 25% 25%, rgba(45, 55, 72, 0.4) 0%, transparent 50%),
-            radial-gradient(circle at 75% 75%, rgba(26, 32, 44, 0.4) 0%, transparent 50%),
-            radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
-    }
-    
-    .social-icon {
-        background: rgba(255, 255, 255, 0.05);
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-    
-    .game-header,
-    .game-footer {
-        background: rgba(255, 255, 255, 0.05);
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-}
-
-/* Performance Optimizations */
-.container,
-.messi-head,
-.ronaldo-head,
-.ronaldo-silhouette,
-.body-part,
-.social-icon {
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-}
-
-/* Hover Effects for Interactive Elements */
-.body-part:active {
-    transform: scale(0.95) translateY(-5px);
-    transition: var(--transition-fast);
-}
-
-.social-icon:active {
-    transform: translateY(-10px) scale(1.05);
-    transition: var(--transition-fast);
-}
-
-/* Additional Visual Enhancements */
-.game-container-glow {
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    background: linear-gradient(45deg, 
-        rgba(102, 126, 234, 0.3) 0%, 
-        rgba(118, 75, 162, 0.3) 25%,
-        rgba(240, 147, 251, 0.3) 50%,
-        rgba(245, 87, 108, 0.3) 75%,
-        rgba(102, 126, 234, 0.3) 100%);
-    border-radius: calc(var(--border-radius-lg) + 10px);
-    filter: blur(20px);
-    z-index: -1;
-    animation: containerGlow 4s ease-in-out infinite;
-}
-
-@keyframes containerGlow {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.6; }
-}
-
-/* Accessibility Improvements */
-@media (prefers-reduced-motion: no-preference) {
-    .container::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.02), transparent);
-        animation: ambientShimmer 8s linear infinite;
-        pointer-events: none;
-        z-index: 2;
-    }
-}
-
-@keyframes ambientShimmer {
-    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-}
-
-/* Focus States for Accessibility */
-.body-part:focus,
-.social-icon:focus {
-    outline: 3px solid rgba(255, 255, 255, 0.6);
-    outline-offset: 4px;
-}
-
-/* Print Styles */
-@media print {
-    .container {
-        background: white;
-        box-shadow: none;
-        border: 2px solid #000;
-    }
-    
-    .messi-head,
-    .ronaldo-head,
-    .body-part,
-    .social-icon {
-        filter: none;
-        backdrop-filter: none;
-    }
-}
-        </style>
-    
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 1080px;
+            height: 1920px;
+            background: linear-gradient(180deg, #87CEEB 0%, #98FB98 100%);
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Character Heads */
+        #messiHead {
+            position: absolute;
+            top: 100px;
+            left: 50px;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid #FFD700;
+            background: #FFF;
+            object-fit: cover;
+            opacity: 0;
+            transform: translateX(-300px);
+        }
+
+        #ronaldoHead {
+            position: absolute;
+            top: 100px;
+            right: 50px;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid #FF6B6B;
+            background: #FFF;
+            object-fit: cover;
+            opacity: 0;
+            transform: translateX(300px);
+        }
+
+        /* Ronaldo Silhouette */
+        #ronaldoSilhouette {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 400px;
+            opacity: 0;
+            filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
+        }
+
+        /* Body Parts */
+        .bodyPart {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            cursor: grab;
+            border-radius: 10px;
+            background: #FFF;
+            border: 3px solid #4ECDC4;
+            object-fit: cover;
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        #armLeft {
+            bottom: 300px;
+            left: 100px;
+        }
+
+        #armRight {
+            bottom: 400px;
+            left: 200px;
+        }
+
+        #legLeft {
+            bottom: 200px;
+            left: 150px;
+        }
+
+        #legRight {
+            bottom: 250px;
+            left: 50px;
+        }
+
+        #torso {
+            bottom: 350px;
+            left: 250px;
+        }
+
+        /* Tungtung Face */
+        #tungtungFace {
+            position: absolute;
+            bottom: 450px;
+            right: 100px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid #FF69B4;
+            background: #FFF;
+            object-fit: cover;
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        /* Finger Pointer */
+        #fingerPointer {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            opacity: 0;
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        /* Ronaldo Celebration */
+        #ronaldoCelebration {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            height: 450px;
+            opacity: 0;
+            filter: drop-shadow(0 0 30px rgba(255,215,0,0.8));
+        }
+
+        /* Social Icons */
+        #socialIcons {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 80px;
+            opacity: 0;
+        }
+
+        #socialIcons img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #FFF;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: scale(0);
+        }
+
+        /* Glitch Effect */
+        .glitch {
+            animation: glitch 0.5s ease-in-out;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0, 0) scale(1); }
+            10% { transform: translate(-5px, 2px) scale(1.05); }
+            20% { transform: translate(3px, -3px) scale(0.95); }
+            30% { transform: translate(-2px, 1px) scale(1.02); }
+            40% { transform: translate(4px, -1px) scale(0.98); }
+            50% { transform: translate(-3px, 3px) scale(1.01); }
+            60% { transform: translate(2px, -2px) scale(0.99); }
+            70% { transform: translate(-1px, 4px) scale(1.03); }
+            80% { transform: translate(1px, -4px) scale(0.97); }
+            90% { transform: translate(-4px, 1px) scale(1.01); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        /* Success Glow */
+        .success-glow {
+            animation: successGlow 2s ease-in-out;
+        }
+
+        @keyframes successGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(255,215,0,0.3)); }
+            50% { filter: drop-shadow(0 0 50px rgba(255,215,0,1)); }
+            100% { filter: drop-shadow(0 0 30px rgba(255,215,0,0.8)); }
+        }
+
+        /* Placeholder styling for missing images */
+        img {
+            background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
+                        linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
+                        linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <!-- Background Elements -->
-        <div class="victory-glow"></div>
-        <div class="glitch-overlay"></div>
-
         <!-- Character Heads -->
-        <img src="Gemini_Generated_Image_qm1ejvqm1ejvqm1e.png" alt="Messi" class="messi-head" id="messiHead">
-        <img src="Gemini_Generated_Image_by2x2xby2x2xby2x.png" alt="Ronaldo" class="ronaldo-head" id="ronaldoHead">
-
+        <img src="Gemini_Generated_Image_qm1ejvqm1ejvqm1e.png" alt="Messi" id="messiHead">
+        <img src="Gemini_Generated_Image_by2x2xby2x2xby2x.png" alt="Ronaldo" id="ronaldoHead">
+        
         <!-- Ronaldo Silhouette -->
-        <img src="Gemini_Generated_Image_ogrg03ogrg03ogrg (1).png" alt="Ronaldo Silhouette" class="ronaldo-silhouette" id="ronaldoSilhouette">
-
+        <img src="Gemini_Generated_Image_ogrg03ogrg03ogrg (1).png" alt="Ronaldo Silhouette" id="ronaldoSilhouette">
+        
         <!-- Body Parts -->
-        <img src="ChatGPT Image Jul 9, 2025, 05_32_13 PM - Copy - Copy - Copy - Copy.png" alt="Left Arm" class="body-part" id="armLeft" style="left: 100px;">
-        <img src="ChatGPT Image Jul 9, 2025, 05_32_17 PM.png" alt="Right Arm" class="body-part" id="armRight" style="left: 200px;">
-        <img src="ChatGPT Image Jul 9, 2025, 05_32_44 PM.png" alt="Left Leg" class="body-part" id="legLeft" style="left: 300px;">
-        <img src="ChatGPT Image Jul 9, 2025, 05_35_33 PM.png" alt="Right Leg" class="body-part" id="legRight" style="left: 400px;">
-        <img src="ChatGPT Image Jul 9, 2025, 05_32_30 PM.png" alt="Torso" class="body-part" id="torso" style="left: 500px;">
-
+        <img src="ChatGPT Image Jul 9, 2025, 05_32_13 PM - Copy - Copy - Copy - Copy.png" alt="Left Arm" id="armLeft" class="bodyPart">
+        <img src="ChatGPT Image Jul 9, 2025, 05_32_17 PM.png" alt="Right Arm" id="armRight" class="bodyPart">
+        <img src="ChatGPT Image Jul 9, 2025, 05_32_44 PM.png" alt="Left Leg" id="legLeft" class="bodyPart">
+        <img src="ChatGPT Image Jul 9, 2025, 05_35_33 PM.png" alt="Right Leg" id="legRight" class="bodyPart">
+        <img src="ChatGPT Image Jul 9, 2025, 05_32_30 PM.png" alt="Torso" id="torso" class="bodyPart">
+        
         <!-- Tungtung Face -->
-        <img src="Gemini_Generated_Image_gq0aowgq0aowgq0a.png" alt="Tungtung Face" class="tungtung-face" id="tungtungFace">
-
+        <img src="Gemini_Generated_Image_gq0aowgq0aowgq0a.png" alt="Tungtung Face" id="tungtungFace">
+        
         <!-- Finger Pointer -->
-        <img src="Gemini_Generated_Image_3048o13048o13048.png" alt="Finger Pointer" class="finger-pointer" id="fingerPointer">
-
+        <img src="Gemini_Generated_Image_3048o13048o13048.png" alt="Finger Pointer" id="fingerPointer">
+        
+        <!-- Ronaldo Celebration -->
+        <img src="placeholder_ronaldo_celebration.png" alt="Ronaldo Celebration" id="ronaldoCelebration">
+        
         <!-- Social Icons -->
-        <div class="social-icons" id="socialIcons">
-            <div class="social-icon">👍</div>
-            <div class="social-icon">💬</div>
-            <div class="social-icon">🔔</div>
+        <div id="socialIcons">
+            <img src="like.png" alt="Like">
+            <img src="comment.png" alt="Comment">
+            <img src="subscribe.png" alt="Subscribe">
         </div>
     </div>
 
     <script>
-// Modern Animation Timeline
-const timeline = {
-    intro: { start: 0, end: 1500 },
-    mainGame: { start: 2000, end: 12000 },
-    twist: { start: 13000, end: 16000 },
-    victory: { start: 17000, end: 20000 },
-    outro: { start: 21000, end: 22000 }
-};
+        // Initialize GSAP timeline
+        const tl = gsap.timeline();
 
-// Elements
-const messiHead = document.getElementById('messiHead');
-const ronaldoHead = document.getElementById('ronaldoHead');
-const ronaldoSilhouette = document.getElementById('ronaldoSilhouette');
-const fingerPointer = document.getElementById('fingerPointer');
-const tungtungFace = document.getElementById('tungtungFace');
-const socialIcons = document.getElementById('socialIcons');
-const glitchOverlay = document.querySelector('.glitch-overlay');
-const victoryGlow = document.querySelector('.victory-glow');
+        // Intro Animation (0-2 seconds)
+        tl.to("#messiHead", { opacity: 1, x: 0, duration: 1, ease: "back.out(1.7)" })
+          .to("#ronaldoHead", { opacity: 1, x: 0, duration: 1, ease: "back.out(1.7)" }, "-=0.5")
+          .to("#ronaldoSilhouette", { opacity: 0.8, duration: 0.5, ease: "power2.out" }, "-=0.3");
 
-// Fixed: Include all body parts
-const bodyParts = [
-    document.getElementById('armLeft'),
-    document.getElementById('armRight'),
-    document.getElementById('legLeft'),
-    document.getElementById('legRight'),
-    document.getElementById('torso')
-];
+        // Show body parts (2-3 seconds)
+        tl.to(".bodyPart", { opacity: 1, scale: 1, duration: 0.5, stagger: 0.1, ease: "back.out(1.7)" })
+          .to("#tungtungFace", { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }, "-=0.3");
 
-let currentAttempt = 0;
-let animationStartTime = Date.now();
-let isAnimationRunning = false;
+        // Game Phase - Wrong attempts (3-15 seconds)
+        const wrongParts = ["#armLeft", "#legRight", "#torso"];
+        const silhouetteCenter = { x: 540, y: 960 };
 
-// Utility functions
-function getTimeElapsed() {
-    return Date.now() - animationStartTime;
-}
-
-function showFingerPointer(x, y) {
-    fingerPointer.style.left = x + 'px';
-    fingerPointer.style.top = y + 'px';
-    fingerPointer.style.opacity = '1';
-    fingerPointer.style.transform = 'scale(1)';
-    fingerPointer.classList.add('visible');
-}
-
-function hideFingerPointer() {
-    fingerPointer.style.opacity = '0';
-    fingerPointer.style.transform = 'scale(0.8)';
-    fingerPointer.classList.remove('visible');
-}
-
-function dragElement(element, targetX, targetY, onComplete) {
-    const startX = element.offsetLeft;
-    const startY = element.offsetTop;
-    
-    showFingerPointer(startX, startY);
-    element.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-    element.style.transform = 'scale(1.05)';
-    element.classList.add('dragging');
-    
-    setTimeout(() => {
-        element.style.left = targetX + 'px';
-        element.style.top = targetY + 'px';
-        fingerPointer.style.left = targetX + 'px';
-        fingerPointer.style.top = targetY + 'px';
-        
-        setTimeout(() => {
-            element.style.transform = 'scale(1)';
-            element.classList.remove('dragging');
-            hideFingerPointer();
-            if (onComplete) onComplete();
-        }, 600);
-    }, 200);
-}
-
-function failAttempt(element) {
-    element.style.transition = 'all 0.3s ease-out';
-    element.style.transform = 'scale(0.9) rotate(5deg)';
-    element.style.filter = 'brightness(0.7) contrast(1.2)';
-    element.classList.add('failed');
-    
-    glitchOverlay.style.opacity = '0.8';
-    glitchOverlay.classList.add('active');
-    
-    messiHead.style.transform = 'scale(1.1)';
-    messiHead.classList.add('laugh');
-    
-    setTimeout(() => {
-        element.style.transition = 'all 0.4s ease-in-out';
-        element.style.transform = 'scale(1) rotate(0deg)';
-        element.style.filter = 'none';
-        element.classList.remove('failed');
-        
-        glitchOverlay.style.opacity = '0';
-        glitchOverlay.classList.remove('active');
-        
-        messiHead.style.transform = 'scale(1)';
-        messiHead.classList.remove('laugh');
-        
-        // Reset position with smooth animation
-        resetElementPosition(element);
-    }, 600);
-}
-
-function successAttempt(element) {
-    element.style.transition = 'all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-    element.style.transform = 'scale(1.2)';
-    element.style.filter = 'brightness(1.3) saturate(1.4)';
-    element.classList.add('success');
-    
-    setTimeout(() => {
-        element.style.transform = 'scale(1)';
-        element.style.filter = 'none';
-        element.classList.remove('success');
-    }, 500);
-}
-
-function resetElementPosition(element) {
-    const elementId = element.id;
-    let basePosition = { left: '100px', bottom: '200px' };
-    
-    // Set different positions for different body parts
-    switch(elementId) {
-        case 'armLeft':
-            basePosition = { left: '80px', bottom: '250px' };
-            break;
-        case 'armRight':
-            basePosition = { left: '180px', bottom: '250px' };
-            break;
-        case 'legLeft':
-            basePosition = { left: '120px', bottom: '150px' };
-            break;
-        case 'legRight':
-            basePosition = { left: '220px', bottom: '150px' };
-            break;
-        case 'torso':
-            basePosition = { left: '150px', bottom: '200px' };
-            break;
-    }
-    
-    element.style.left = basePosition.left;
-    element.style.top = 'auto';
-    element.style.bottom = basePosition.bottom;
-}
-
-// Animation sequences
-function runIntro() {
-    setTimeout(() => {
-        messiHead.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
-        messiHead.style.transform = 'translateY(0) scale(1)';
-        messiHead.style.opacity = '1';
-        messiHead.classList.add('enter');
-        
-        setTimeout(() => {
-            ronaldoHead.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            ronaldoHead.style.transform = 'translateY(0) scale(1)';
-            ronaldoHead.style.opacity = '1';
-            ronaldoHead.classList.add('enter');
-        }, 300);
-    }, 200);
-}
-
-function runMainGame() {
-    setTimeout(() => {
-        ronaldoSilhouette.style.transition = 'all 1s ease-out';
-        ronaldoSilhouette.style.opacity = '1';
-        ronaldoSilhouette.style.transform = 'scale(1)';
-        ronaldoSilhouette.classList.add('visible');
-        
-        // Start body part attempts with proper timing (spread across 10 seconds)
-        setTimeout(() => attemptBodyPart(0), 1000);  // armLeft
-        setTimeout(() => attemptBodyPart(1), 3000);  // armRight
-        setTimeout(() => attemptBodyPart(2), 5000);  // legLeft
-        setTimeout(() => attemptBodyPart(3), 7000);  // legRight
-        setTimeout(() => attemptBodyPart(4), 9000);  // torso
-        
-    }, timeline.mainGame.start - timeline.intro.end);
-}
-
-function attemptBodyPart(index) {
-    if (index >= bodyParts.length) return;
-    
-    const part = bodyParts[index];
-    const silhouetteRect = ronaldoSilhouette.getBoundingClientRect();
-    const containerRect = document.querySelector('.container').getBoundingClientRect();
-    
-    const targetX = silhouetteRect.left - containerRect.left + 80;
-    const targetY = silhouetteRect.top - containerRect.top + 120;
-    
-    dragElement(part, targetX, targetY, () => {
-        failAttempt(part);
-        currentAttempt++;
-    });
-}
-
-function runTwist() {
-    setTimeout(() => {
-        const silhouetteRect = ronaldoSilhouette.getBoundingClientRect();
-        const containerRect = document.querySelector('.container').getBoundingClientRect();
-        
-        const targetX = silhouetteRect.left - containerRect.left + 80;
-        const targetY = silhouetteRect.top - containerRect.top + 40;
-        
-        dragElement(tungtungFace, targetX, targetY, () => {
-            // Trigger glitch effect
-            tungtungFace.style.transition = 'all 0.3s ease-out';
-            tungtungFace.style.transform = 'scale(0.8) rotate(-3deg)';
-            tungtungFace.style.filter = 'hue-rotate(180deg) brightness(1.5)';
-            tungtungFace.classList.add('glitch');
-            
-            // Trigger exaggerated Messi laugh
-            messiHead.style.transition = 'all 0.3s ease-out';
-            messiHead.style.transform = 'scale(1.15) rotate(2deg)';
-            messiHead.classList.add('big-laugh');
-            
-            // Add glitch to silhouette
-            ronaldoSilhouette.style.filter = 'hue-rotate(90deg) brightness(1.2) contrast(1.5)';
-            ronaldoSilhouette.style.transform = 'scale(1.05) rotate(1deg)';
-            
-            setTimeout(() => {
-                // Reset tungtung face
-                tungtungFace.style.transition = 'all 0.5s ease-in-out';
-                tungtungFace.style.transform = 'scale(1) rotate(0deg)';
-                tungtungFace.style.filter = 'none';
-                tungtungFace.classList.remove('glitch');
-                
-                // Reset Messi
-                messiHead.style.transform = 'scale(1) rotate(0deg)';
-                messiHead.classList.remove('big-laugh');
-                
-                // Reset silhouette
-                ronaldoSilhouette.style.filter = 'none';
-                ronaldoSilhouette.style.transform = 'scale(1) rotate(0deg)';
-                
-                // Reset tungtung face position
-                tungtungFace.style.left = '200px';
-                tungtungFace.style.top = 'auto';
-                tungtungFace.style.bottom = '200px';
-            }, 800);
-        });
-    }, timeline.twist.start - timeline.intro.end);
-}
-
-function runVictory() {
-    setTimeout(() => {
-        const silhouetteRect = ronaldoSilhouette.getBoundingClientRect();
-        const containerRect = document.querySelector('.container').getBoundingClientRect();
-        
-        const targetX = silhouetteRect.left - containerRect.left + 80;
-        const targetY = silhouetteRect.top - containerRect.top + 40;
-        
-        dragElement(ronaldoHead, targetX, targetY, () => {
-            successAttempt(ronaldoHead);
-            
-            // Complete the silhouette
-            ronaldoSilhouette.style.transition = 'all 1s ease-out';
-            ronaldoSilhouette.style.filter = 'brightness(1.2) saturate(1.3)';
-            ronaldoSilhouette.classList.add('complete');
-            
-            // Trigger victory glow
-            victoryGlow.style.transition = 'all 0.8s ease-out';
-            victoryGlow.style.opacity = '1';
-            victoryGlow.style.transform = 'scale(1.2)';
-            victoryGlow.classList.add('active');
-            
-            // Switch to celebration image if available
-            setTimeout(() => {
-                const celebrationImg = document.getElementById('ronaldoCelebration');
-                if (celebrationImg) {
-                    celebrationImg.style.opacity = '1';
-                    celebrationImg.style.transform = 'scale(1)';
-                    celebrationImg.classList.add('celebrating');
-                }
-            }, 500);
-            
-            setTimeout(() => {
-                victoryGlow.style.opacity = '0';
-                victoryGlow.style.transform = 'scale(1)';
-                victoryGlow.classList.remove('active');
-            }, 2000);
-        });
-    }, timeline.victory.start - timeline.intro.end);
-}
-
-function runOutro() {
-    setTimeout(() => {
-        // Show only Like, Comment, Subscribe icons
-        socialIcons.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
-        socialIcons.style.opacity = '1';
-        socialIcons.style.transform = 'translateY(0) scale(1)';
-        socialIcons.classList.add('visible');
-        
-        // Add staggered animation to individual icons
-        const icons = socialIcons.querySelectorAll('img');
-        icons.forEach((icon, index) => {
-            setTimeout(() => {
-                icon.style.transition = 'all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-                icon.style.transform = 'scale(1.1)';
-                icon.style.filter = 'brightness(1.2)';
-                
+        wrongParts.forEach((part, index) => {
+            // Show finger pointer
+            tl.to("#fingerPointer", { 
+                opacity: 1, 
+                x: gsap.getProperty(part, "x") - 30, 
+                y: gsap.getProperty(part, "y") - 30,
+                duration: 0.3 
+            })
+            // Drag part to silhouette
+            .to([part, "#fingerPointer"], { 
+                x: silhouetteCenter.x - 40, 
+                y: silhouetteCenter.y - 40, 
+                duration: 1.5, 
+                ease: "power2.inOut" 
+            })
+            // Glitch effect and rejection
+            .add(() => {
+                document.querySelector("#ronaldoSilhouette").classList.add("glitch");
                 setTimeout(() => {
-                    icon.style.transform = 'scale(1)';
-                    icon.style.filter = 'none';
-                }, 300);
-            }, index * 200);
+                    document.querySelector("#ronaldoSilhouette").classList.remove("glitch");
+                }, 500);
+            })
+            .to("#ronaldoSilhouette", { rotation: "+=10", duration: 0.1, yoyo: true, repeat: 3 })
+            // Messi laughs
+            .to("#messiHead", { 
+                scale: 1.2, 
+                rotation: "+=5", 
+                duration: 0.3, 
+                yoyo: true, 
+                repeat: 3, 
+                ease: "power2.inOut" 
+            }, "-=0.3")
+            // Return part to original position
+            .to(part, { 
+                x: gsap.getProperty(part, "x"), 
+                y: gsap.getProperty(part, "y"), 
+                duration: 0.8, 
+                ease: "bounce.out" 
+            })
+            // Hide finger pointer
+            .to("#fingerPointer", { opacity: 0, duration: 0.3 });
         });
-    }, timeline.outro.start - timeline.intro.end);
-}
 
-// Reset all elements to initial state
-function resetAnimation() {
-    currentAttempt = 0;
-    isAnimationRunning = false;
-    
-    // Reset all elements
-    [messiHead, ronaldoHead, ronaldoSilhouette, fingerPointer, tungtungFace, socialIcons].forEach(el => {
-        if (el) {
-            el.style.transition = 'none';
-            el.style.transform = '';
-            el.style.opacity = '';
-            el.style.filter = '';
-            el.className = el.className.replace(/\s*(enter|visible|dragging|failed|success|glitch|big-laugh|complete|celebrating|active)\s*/g, '');
-        }
-    });
-    
-    // Reset body parts
-    bodyParts.forEach(part => {
-        if (part) {
-            part.style.transition = 'none';
-            part.style.transform = '';
-            part.style.filter = '';
-            part.className = part.className.replace(/\s*(dragging|failed|success)\s*/g, '');
-            resetElementPosition(part);
-        }
-    });
-    
-    // Reset overlays
-    if (glitchOverlay) {
-        glitchOverlay.style.opacity = '0';
-        glitchOverlay.classList.remove('active');
-    }
-    
-    if (victoryGlow) {
-        victoryGlow.style.opacity = '0';
-        victoryGlow.style.transform = 'scale(1)';
-        victoryGlow.classList.remove('active');
-    }
-}
+        // Tungtung face attempt (16-20 seconds)
+        tl.to("#fingerPointer", { 
+            opacity: 1, 
+            x: gsap.getProperty("#tungtungFace", "x") - 30, 
+            y: gsap.getProperty("#tungtungFace", "y") - 30,
+            duration: 0.3 
+        })
+        .to(["#tungtungFace", "#fingerPointer"], { 
+            x: silhouetteCenter.x - 50, 
+            y: silhouetteCenter.y - 200, 
+            duration: 1.5, 
+            ease: "power2.inOut" 
+        })
+        // Major glitch for wrong face
+        .add(() => {
+            document.querySelector("#ronaldoSilhouette").classList.add("glitch");
+            setTimeout(() => {
+                document.querySelector("#ronaldoSilhouette").classList.remove("glitch");
+            }, 800);
+        })
+        .to("#ronaldoSilhouette", { 
+            rotation: "+=20", 
+            scale: 1.1, 
+            duration: 0.2, 
+            yoyo: true, 
+            repeat: 5, 
+            ease: "power2.inOut" 
+        })
+        // Messi big laugh
+        .to("#messiHead", { 
+            scale: 1.5, 
+            rotation: "+=15", 
+            duration: 0.4, 
+            yoyo: true, 
+            repeat: 3, 
+            ease: "elastic.out(1, 0.3)" 
+        }, "-=0.5")
+        // Return tungtung face
+        .to("#tungtungFace", { 
+            x: gsap.getProperty("#tungtungFace", "x"), 
+            y: gsap.getProperty("#tungtungFace", "y"), 
+            duration: 1, 
+            ease: "bounce.out" 
+        })
+        .to("#fingerPointer", { opacity: 0, duration: 0.3 });
 
-// Start animation
-function startAnimation() {
-    if (isAnimationRunning) return;
-    
-    isAnimationRunning = true;
-    animationStartTime = Date.now();
-    
-    // Run all animation phases
-    runIntro();
-    runMainGame();
-    runTwist();
-    runVictory();
-    runOutro();
-    
-    // Mark animation as complete after total duration
-    setTimeout(() => {
-        isAnimationRunning = false;
-    }, timeline.outro.end);
-}
+        // Victory - Correct Ronaldo head (21-25 seconds)
+        tl.to("#fingerPointer", { 
+            opacity: 1, 
+            x: gsap.getProperty("#ronaldoHead", "x") - 30, 
+            y: gsap.getProperty("#ronaldoHead", "y") - 30,
+            duration: 0.3 
+        })
+        .to(["#ronaldoHead", "#fingerPointer"], { 
+            x: silhouetteCenter.x - 75, 
+            y: silhouetteCenter.y - 200, 
+            duration: 1.5, 
+            ease: "power2.inOut" 
+        })
+        // Success effect
+        .to("#ronaldoSilhouette", { 
+            scale: 1.1, 
+            duration: 0.3, 
+            ease: "power2.out" 
+        })
+        .add(() => {
+            document.querySelector("#ronaldoSilhouette").classList.add("success-glow");
+        })
+        // Hide silhouette and show celebration
+        .to("#ronaldoSilhouette", { opacity: 0, duration: 0.5 })
+        .to("#ronaldoCelebration", { 
+            opacity: 1, 
+            scale: 1.2, 
+            duration: 0.8, 
+            ease: "back.out(1.7)" 
+        }, "-=0.3")
+        // Celebration pulse
+        .to("#ronaldoCelebration", { 
+            scale: 1.3, 
+            duration: 0.5, 
+            yoyo: true, 
+            repeat: 3, 
+            ease: "sine.inOut" 
+        })
+        // Hide finger pointer and used head
+        .to(["#fingerPointer", "#ronaldoHead"], { opacity: 0, duration: 0.5 });
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    // Ensure all elements are in initial state
-    resetAnimation();
-    
-    // Start animation after brief delay
-    setTimeout(() => {
-        startAnimation();
-    }, 100);
-});
+        // Outro - Social icons (26-30 seconds)
+        tl.to("#socialIcons", { opacity: 1, duration: 0.5 })
+          .to("#socialIcons img", { 
+              scale: 1, 
+              rotation: 360, 
+              duration: 0.6, 
+              stagger: 0.2, 
+              ease: "bounce.out" 
+          })
+          .to("#socialIcons img", { 
+              scale: 1.1, 
+              duration: 0.3, 
+              yoyo: true, 
+              repeat: -1, 
+              stagger: 0.1, 
+              ease: "sine.inOut" 
+          });
 
-// Restart animation on click (for testing)
-document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('container') || e.target.tagName === 'BODY') {
-        resetAnimation();
+        // Auto-restart animation after 32 seconds
         setTimeout(() => {
-            startAnimation();
-        }, 100);
-    }
-});
+            location.reload();
+        }, 32000);
     </script>
 </body>
 </html>
